@@ -14,7 +14,7 @@
         <nav class="navbar navbar-light bg-light">
             <a class="navbar-brand" href="#">
               <img src="pic/1.png" width="30" height="30" class="d-inline-block align-top" alt="" >
-               幼兒安全管理
+               教師選課意願系統
             </a>
           </nav>
        
@@ -26,9 +26,9 @@
                   <img class="mb-4" src="pic/1.png" alt="" width="72" height="72">
                   <p class="card-text"> 
                       
-                    <form method="POST" action="dbconnection.php">
-                    <input type="text" id="inputEmail" placeholder="帳號" class="form-control" required autofocus name="username">
-                    <input type="password" id="inputPassword" style="margin-top: 10px;" placeholder="密碼" class="form-control"  required name="passwd">
+                    <form method="POST" action="login.php">
+                    <input type="text" id="inputAccount" placeholder="帳號" class="form-control" required autofocus name="account">
+                    <input type="password" id="inputPassword" style="margin-top: 10px;" placeholder="密碼" class="form-control"  required name="password">
                     <div class="checkbox mb-3">
                         <label>
                           <input type="checkbox" value="remember-me"> Remember me
@@ -37,7 +37,6 @@
                      
                       <input type="submit" value="登入"  class="btn btn-warning" style="margin-top: 10px;">
                       <div>
-                      <a href="member_reg.html">註冊</a></div>
                 </form></p>
                 </div>
               </div>
