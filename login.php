@@ -1,31 +1,28 @@
 <?php
-phpinfo();
 require_once("dbconnection.php");
 $msg="";
-if(isset($_POST["username"]) && isset($_POST["passwd"])){
-    $query_RecLogin = "SELECT m_username, m_passwd FROM member WHERE m_username=:username";
-    $stmt=$db_link->prepare($query_RecLogin);
-    $stmt->bindparam(":username", $_POST["username"]);
-    $stmt->execute();
+if(isset($_POST["account"]) && isset($_POST["password"])){
 
+    $query_TeacherLogin = "SELECT account, password, name FROM teacher_account WHERE account=:account";
+    $stmt=$conn->prepare($query_TeacherLogin, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    $stmt->execute(array(':account' => $_POST["account"]));
     $result=$stmt->fetch(PDO::FETCH_ASSOC);
-    $username=$result["m_username"];
-    $passwd=$result["m_passwd"];
+    $account=$result["account"];
+    $password=$result["password"];
+    $name=$result["name"];
     $stmt->db=null;
-    //echo "test1"+$_POST["passwd"];
-    //echo "test2"+$passwd;
 
-    if($username =='' || $username == null){
-        $msg='查無此帳號，兩秒後自動導回登入畫面...';
-        header("Refresh:2;url=test.html");
+    if($account ==$_POST["account"] && $password == $_POST["password"]){
+        $msg= $name.'老師您好，請稍後...';
+        header("Refresh:2;url=home.php");
        
-    }elseif( $_POST["passwd"] == '' || $passwd != $_POST["passwd"]){
-        $msg='密碼不正確，兩秒後自動導回登入畫面...';
-        header("Refresh:2;url=test.html");
+    }elseif( $account ==$_POST["account"] && $password != $_POST["password"]){
+        $msg='密碼不正確，五秒後自動導回登入畫面...';
+        header("Refresh:5;url=login.html");
         
     }else{
-        $msg='帳密正確，兩秒後自動導向首頁...';
-        header("Refresh:2;url=home.html");
+        $msg='查無此帳號，請洽系辦人員，五秒後自動導回登入畫面...';
+        header("Refresh:5;url=login.html");
     }
 }
 echo $msg; 
