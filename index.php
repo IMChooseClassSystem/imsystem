@@ -65,7 +65,13 @@
         <a class="p-2 text-muted" href="#">Travel</a>
       </nav> -->
     </div>
-
+    <?php
+      include("dbconnection.php");
+      $query_courseInformation = "SELECT * FROM curriculum";
+      $stmt = $conn->prepare($query_courseInformation);
+      $stmt->execute();
+      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ?>
     <div class="card w-auto p-3 mb-4 bg-light text-center">
       <table class="table table-striped table-sm">
         <thead>
@@ -83,18 +89,23 @@
           </tr>
         </thead>
         <tbody>
+          <?php 
+          foreach ($result as $row) {
+            ?>
           <tr>
-            <th scope="row">1</th>
-            <td>選</td>
-            <td>資管系</td>
-            <td>四技</td>
-            <td>四</td>
-            <td>馬鈴薯種植</td>
-            <td>學期</td>
-            <td>3</td>
-            <td>3</td>
-            <td>邱淑芬(1)、王約翰(2)</td>
+           
+            <td scope="row"><?php echo $row["ID"];?></td>
+                <td><?php echo $row["course"];?></td>
+                <td><?php echo $row["outkind"];?></td>
+                <td><?php echo $row["kind"];?></td>
+                <td><?php echo $row["getyear"];?></td>
+                <td><?php echo $row["curriculum"];?></td>
+                <td><?php echo $row["kindyear"];?></td>
+               
+              
+            
           </tr>
+          <?php } ?>
         </tbody>
       </table>
     </div>
