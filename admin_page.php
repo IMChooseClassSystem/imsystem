@@ -6,8 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+    function init() {
+        $('#kind').change(function() {
+            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val();
+        });
+        $('#class').change(function() {
+            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() + '&class=' + $(
+                '[name=class]').val();
+        });
+    }
+    $(document).ready(init);
+    </script>
 </head>
-<?php include("class.php")?>
+<?php include("class.php");include("admin_page_function.php");?>
 <div class="container-fluid">
     <header class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
@@ -30,11 +43,13 @@
         <div class="col">
             學制
             <select class="form-control" id="kind">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+                <?php foreach ($kind_result as $row){
+                    if ($row["kind_ID"] == $_GET["kind"]){
+                ?>
+                <option value=<?php $row["kind_ID"]?>> <?php $row["kind_name"]?></option>
+                <?php }else {?>
+                <option value=<?php $row["kind_ID"]?>><?php $row["kind_name"]?></option>
+                <?php }  }?>
             </select>
         </div>
         <div class="col">
@@ -97,6 +112,5 @@
             </nav>
         </div>
     </div>
-</div>
 
 </html>
