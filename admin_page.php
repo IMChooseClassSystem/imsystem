@@ -93,8 +93,10 @@
                     <th scope="col">年級</th>
                     <th scope="col">課程名稱</th>
                     <th scope="col">學年 / 學期</th>
-                    <th scope="col">學分</th>
-                    <th scope="col">時數</th>
+                    <th scope="col">學期(上/下) </th>
+                    <th scope="col">學分(上/下)</th>
+                    <th scope="col">上課時數(上/下)</th>
+                    <th scope="col">實習時數(上/下)</th>
                     <th scope="col">教師列表</th>
                 </tr>
             </thead>
@@ -109,6 +111,7 @@
                     <td><?=$row["getyear"];?></td>
                     <td><?=$row["curriculum"];?></td>
                     <td><?=$row["kindyear"];?></td>
+                    <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]) ?>
                 </tr>
                 <?php } ?>
             </tbody>
@@ -121,10 +124,7 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <?php for($i=1;$i<=$pages;$i++){ 
-                    echo "<li class='page-item'  value=".$i."><a class='page-link' id='page' name='page' >$i</a>
-                    <li>";
-                        }?>
+                    <?php page_maker($pages, $page);?>
 
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Next">

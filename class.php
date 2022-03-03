@@ -13,9 +13,9 @@
         $class_id=$_GET["class"];
 
     if ($kind_id>0 && $class_id>0)
-        $sqlfilter = "where kind= ".$_GET["kind"]. " and getyear= ".$_GET["class"];
+        $sqlfilter = " where kind= ".$_GET["kind"]. " and getyear= ".$_GET["class"];
     elseif ($kind_id>0)
-        $sqlfilter = "where kind= ".$_GET["kind"];
+        $sqlfilter = " where kind= ".$_GET["kind"];
     else 
         $sqlfilter="";
     
@@ -23,7 +23,7 @@
 
 
     $query_page ="SELECT * FROM ( ";
-    $query_courseInformation = "SELECT ROW_NUMBER() OVER (ORDER BY kind, getyear, course, kindyear) as ROW_ID ,C.*, K.kind_name FROM curriculum C LEFT JOIN kind_info K ON C.kind= K.kind_ID".$sqlfilter;
+    $query_courseInformation = "SELECT ROW_NUMBER() OVER (ORDER BY kind, getyear, course, kindyear, creditDN) as ROW_ID ,C.*, K.kind_name FROM curriculum C LEFT JOIN kind_info K ON C.kind= K.kind_ID".$sqlfilter;
     $stmt = $conn->prepare($query_courseInformation);
     $stmt->execute();
     //get 所有課程
