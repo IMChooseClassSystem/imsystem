@@ -10,17 +10,26 @@
     <script type="text/javascript">
     function init() {
         $('#kind').change(function() {
+
             location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val();
         });
         $('#class').change(function() {
+
             location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() + '&class=' + $(
                 '[name=class]').val();
         });
+        $('.page-item').click(function() {
+
+            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() + '&class=' + $(
+                '[name=class]').val() + '&page=' + $(this).val();
+        });
+
     }
     $(document).ready(init);
     </script>
 </head>
-<?php include("class.php");include("admin_page_function.php");?>
+<?php include("class.php");include("admin_page_function.php");
+?>
 <div class="container-fluid">
     <header class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
@@ -42,19 +51,31 @@
     <div class="row py-1 mb-4">
         <div class="col">
             學制
-            <select class="form-control" id="kind">
-                <?php foreach ($kind_result as $row){
+            <select class="form-control" id="kind" name="kind">
+                <option value="0">--</option>
+                <?php 
+                    foreach ($kind_result as $row){
                     if ($row["kind_ID"] == $_GET["kind"]){
                 ?>
-                <option value=<?php $row["kind_ID"]?>> <?php $row["kind_name"]?></option>
+                <option value="<?= $row["kind_ID"]?>" selected> <?= $row["kind_name"]?></option>
                 <?php }else {?>
-                <option value=<?php $row["kind_ID"]?>><?php $row["kind_name"]?></option>
+                <option value=<?= $row["kind_ID"]?>><?=$row["kind_name"]?></option>
                 <?php }  }?>
             </select>
         </div>
         <div class="col">
             班級
-            <select class="form-control" id="calss"></select>
+            <select class="form-control" id="class" name="class">
+                <option value="0">--</option>
+                <?php 
+                    foreach ($class_result as $row){
+                    if ($row["class_ID"] == $_GET["class"]){
+                ?>
+                <option value="<?= $row["class_ID"]?>" selected> <?= $row["class_name"]?></option>
+                <?php }else {?>
+                <option value=<?= $row["class_ID"]?>><?=$row["class_name"]?></option>
+                <?php }  }?>
+            </select>
         </div>
         <div class="col-1">
             <a class="btn btn-outline-secondary btn-lg m-auto" href="">查詢</a>
@@ -80,13 +101,14 @@
             <tbody>
                 <?php foreach ($result as $row) { ?>
                 <tr>
-                    <td scope="row"><?php echo $row["ID"];?></td>
-                    <td><?php echo $row["course"];?></td>
-                    <td><?php echo $row["outkind"];?></td>
-                    <td><?php echo $row["kind"];?></td>
-                    <td><?php echo $row["getyear"];?></td>
-                    <td><?php echo $row["curriculum"];?></td>
-                    <td><?php echo $row["kindyear"];?></td>
+                    <td scope="row">
+                        <?=$row["ROW_ID"];?></td>
+                    <td><?=$row["course"];?></td>
+                    <td><?=$row["outkind"];?></td>
+                    <td><?=$row["kind_name"];?></td>
+                    <td><?=$row["getyear"];?></td>
+                    <td><?=$row["curriculum"];?></td>
+                    <td><?=$row["kindyear"];?></td>
                 </tr>
                 <?php } ?>
             </tbody>
@@ -99,9 +121,10 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <?php for($i=1;$i<=$pages;$i++){
-                                echo "<li class='page-item'><a class='page-link' href=?page=".$i.">$i</a><li>";
-                            }?>
+                    <?php for($i=1;$i<=$pages;$i++){ 
+                    echo "<li class='page-item'  value=".$i."><a class='page-link' id='page' name='page' >$i</a>
+                    <li>";
+                        }?>
 
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Next">
