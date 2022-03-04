@@ -1,6 +1,29 @@
 <?php
     include("dbconnection.php");
-    $query_courseInformation = "SELECT * FROM curriculum";
+    $sqlfilter="";
+
+    if (empty($_GET["kind"]))
+        $kind_id=0;
+    else
+        $kind_id=$_GET["kind"];
+        
+    if (empty($_GET["class"]))
+        $class_id=0;
+    else
+        $class_id=$_GET["class"];
+
+    if ($kind_id>0 && $class_id>0)
+        $sqlfilter = " where kind= ".$_GET["kind"]. " and getyear= ".$_GET["class"];
+    elseif ($kind_id>0)
+        $sqlfilter = " where kind= ".$_GET["kind"];
+    else 
+        $sqlfilter="";
+    
+    
+
+
+    $query_page ="SELECT * FROM ( ";
+    $query_courseInformation = "SELECT ROW_NUMBER() OVER (ORDER BY kind, getyear, course, kindyear, creditDN) as ROW_ID ,C.*, K.kind_name FROM curriculum C LEFT JOIN kind_info K ON C.kind= K.kind_ID".$sqlfilter;
     $stmt = $conn->prepare($query_courseInformation);
     $stmt->execute();
     //get 所有課程
@@ -19,10 +42,10 @@
     $start = ($page-1)*$per; //每一頁開始的資料序號
     $end = $start+$per;
     //每次撈25筆資料
-    $query_courseInformation= $query_courseInformation.' where ID>'.$start.' and ID<='.$end;
-    $stmt = $conn->prepare($query_courseInformation);
+    $query_page= $query_page.$query_courseInformation.' ) R WHERE ROW_ID>'.$start.' and ROW_ID<='.$end;
+    $stmt = $conn->prepare($query_page);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    
+  
 ?>
