@@ -4,7 +4,7 @@
     $stmt = $conn->prepare($query_courseInformation);
     $stmt->execute();
     //get 所有課程
-    $result = $stmt->fetchAll(PDO::FETCH_ORI_FIRST);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     //get 總筆數
     $data_nums = $stmt->rowCount();
 

@@ -8,6 +8,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script language="javascript">
+var count = 1;
+
+function choose_class() {
+    // document.getElementById("chooseTable").insertRow(1).insertCell(0);
+    var choose_class_CB = document.getElementsByName("CC_CB");
+    var class_ID = [];
+
+    for (i = 1; i <= choose_class_CB.length; i++) {
+        if (choose_class_CB[i - 1].checked) {
+            var row = document.getElementById("chooseTable").insertRow(count);
+            row.insertCell(0).innerHTML = count;
+            for (j = 1; j <= 6; j++) {
+                row.insertCell(j).innerHTML = document.getElementById("classTable").rows[i].cells.item(j).innerHTML;
+
+            }
+            count++;
+            choose_class_CB[i - 1].checked = false;
+        }
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: "orderlist.php",
+        data: {
+            classID: class_ID
+        },
+        success: function(res) {
+            console.log(res)
+        }
+    });
+
+}
+</script>
 <?php include("class.php")?>
 <div class="container-fluid">
     <header class="blog-header py-3">
@@ -42,7 +77,7 @@
             班級
             <select class="form-control" id="calss"></select>
         </div>
-        <div class="col-1">
+        <div class="col-auto">
             <a class="btn btn-outline-secondary btn-lg m-auto" href="">查詢</a>
         </div>
     </div>
@@ -51,7 +86,7 @@
         <div class="col ">
             <div class="card mb-2">
                 <div class="card-body text-center">
-                    <table class="table table-striped table-sm">
+                    <table class="table table-striped table-sm" id="classTable">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -66,9 +101,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($result as $row) { ?>
+                            <?php foreach ($result as  $row) { ?>
                             <tr>
-                                <td><input type="checkbox" id="<?php echo $row["ID"]?>"></td>
+                                <td><input name="CC_CB" type="checkbox" id="<?php echo $row["ID"]?>"></td>
                                 <td><?php echo $row["course"];?></td>
                                 <td><?php echo $row["outkind"];?></td>
                                 <td><?php echo $row["kind"];?></td>
@@ -113,7 +148,7 @@
                     </svg>
                 </button>
                 <div class="w-100 my-4"></div>
-                <button type="button" class="btn btn-success">
+                <button type="button" class="btn btn-success" onclick="choose_class()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                         class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
                         <path
@@ -132,11 +167,26 @@
             </div>
         </div>
         <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title"><?php echo $_SESSION["teacherID"]?></h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+            <div class="card mb-2">
+                <div class="card-body text-center">
+                    <table class="table table-striped table-sm" id="chooseTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">修別</th>
+                                <th scope="col">系所</th>
+                                <th scope="col">學制</th>
+                                <th scope="col">年級</th>
+                                <th scope="col">課程名稱</th>
+                                <th scope="col">學年 / 學期</th>
+                                <th scope="col">學分</th>
+                                <th scope="col">時數</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
