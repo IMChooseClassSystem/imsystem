@@ -10,20 +10,16 @@
     <script type="text/javascript">
     function init() {
         $('#kind').change(function() {
-
             location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val();
         });
         $('#class').change(function() {
-
-            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() + '&class=' + $(
-                '[name=class]').val();
+            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() +
+                '&class=' + $('[name=class]').val();
         });
         $('.page-item').click(function() {
-
-            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() + '&class=' + $(
-                '[name=class]').val() + '&page=' + $(this).val();
+            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() +
+                '&class=' + $('[name=class]').val() + '&page=' + $(this).val();
         });
-
     }
     $(document).ready(init);
     </script>
@@ -90,14 +86,12 @@
                     <th scope="col">修別</th>
                     <th scope="col">系所</th>
                     <th scope="col">學制</th>
-                    <th scope="col">年級</th>
+                    <th scope="col">班級</th>
                     <th scope="col">課程名稱</th>
-                    <th scope="col">學年 / 學期</th>
-                    <th scope="col">學期(上/下) </th>
-                    <th scope="col">學分(上/下)</th>
-                    <th scope="col">上課時數(上/下)</th>
-                    <th scope="col">實習時數(上/下)</th>
-                    <th scope="col">教師列表</th>
+                    <th scope="col">學年 / 學期(上/下)</th>
+                    <th scope="col">學分</th>
+                    <th scope="col">時數(上課/實習)</th>
+                    <th scope="col"> 教師列表</th>
                 </tr>
             </thead>
             <tbody>
@@ -108,10 +102,9 @@
                     <td><?=$row["course"];?></td>
                     <td><?=$row["outkind"];?></td>
                     <td><?=$row["kind_name"];?></td>
-                    <td><?=$row["getyear"];?></td>
+                    <td><?=$row["class_name"];?></td>
                     <td><?=$row["curriculum"];?></td>
-                    <td><?=$row["kindyear"];?></td>
-                    <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]) ?>
+                    <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]); ?>
                 </tr>
                 <?php } ?>
             </tbody>

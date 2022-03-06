@@ -1,5 +1,6 @@
 <?php
     include("dbconnection.php");
+
     $sqlfilter="";
 
     if (empty($_GET["kind"]))
@@ -18,19 +19,16 @@
         $sqlfilter = " where kind= ".$_GET["kind"];
     else 
         $sqlfilter="";
-    
-    
-
-
+        
     $query_page ="SELECT * FROM ( ";
-    $query_courseInformation = "SELECT ROW_NUMBER() OVER (ORDER BY kind, getyear, course, kindyear, creditDN) as ROW_ID ,C.*, K.kind_name FROM curriculum C LEFT JOIN kind_info K ON C.kind= K.kind_ID".$sqlfilter;
+    $query_courseInformation = "SELECT ROW_NUMBER() OVER (ORDER BY kind, getyear, course, kindyear, creditDN) as ROW_ID ,C.*, CI.class_name, K.kind_name FROM curriculum C LEFT JOIN kind_info K ON C.kind= K.kind_ID LEFT JOIN class_info CI ON C.getyear= CI.class_ID and C.kind=CI.kind_ID".$sqlfilter;
     $stmt = $conn->prepare($query_courseInformation);
     $stmt->execute();
     //get 所有課程
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     //get 總筆數
     $data_nums = $stmt->rowCount();
-
+    //print_r($result);
     //設定分頁
     $per = 25;
     $pages = ceil($data_nums/$per);
@@ -47,5 +45,18 @@
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    $kind_sql = "SELECT * FROM kind_info";
+    $kind_result = query_sql($conn, $kind_sql);
   
+    if (!empty($_GET["kind"])){
+      $class_sql = "SELECT * FROM class_info WHERE kind_ID=".$_GET["kind"];
+      $class_result = query_sql($conn, $class_sql);
+    }
+    if(isset($_GET["sort"])){
+        echo class_info_maker($result);
+    }
+  
+ 
+
+
 ?>
