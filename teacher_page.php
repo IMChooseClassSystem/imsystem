@@ -10,36 +10,112 @@
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script language="javascript">
-var count = 1;
+var orderCount = 1;
+var rowCount = 1;
+var class_ID = [];
 
 function choose_class() {
     // document.getElementById("chooseTable").insertRow(1).insertCell(0);
     var choose_class_CB = document.getElementsByName("CC_CB");
-    var class_ID = [];
-
-    for (i = 1; i <= choose_class_CB.length; i++) {
-        if (choose_class_CB[i - 1].checked) {
-            var row = document.getElementById("chooseTable").insertRow(count);
-            row.insertCell(0).innerHTML = count;
-            for (j = 1; j <= 6; j++) {
-                row.insertCell(j).innerHTML = document.getElementById("classTable").rows[i].cells.item(j).innerHTML;
-
-            }
-            count++;
-            choose_class_CB[i - 1].checked = false;
+    // add checked row
+    choose_class_CB.forEach(function(element, index) {
+        if (element.checked && isInArray(element.id) != true) {
+            class_ID.push({
+                orderlist: orderCount,
+                classID: element.id
+            });
+            orderCount++;
         }
+        element.checked = false;
+    });
+    insertTableRow();
+    // $.ajax({
+    //     type: 'POST',
+    //     url: "orderlist.php",
+    //     data: {
+    //         classID: class_ID
+    //     },
+    //     success: function(res) {
+    //         console.log(res)
+    //     }
+    // });
+
+}
+
+function insertTableRow() {
+    for (i = rowCount; i <= class_ID.length; i++) {
+        var tbodyRef = document.getElementById("chooseTable").getElementsByTagName("tbody")[0];
+        // Insert a row at the end of table
+        var newRow = tbodyRef.insertRow();
+        newRow.setAttribute("onclick", "trClick(this)")
+        // newRow.setAttribute("onclick", "trClick(" + i + ")")
+        // Insert a cell at the end of the row
+        var newCell = newRow.insertCell();
+        // Append a text node to the cell
+        var newText = document.createTextNode(rowCount);
+        newCell.appendChild(newText);
+
+        for (j = 1; j <= 6; j++) {
+            newCell = newRow.insertCell();
+            newText = document.createTextNode(document.getElementById("classTable").rows[rowCount].cells.item(j)
+                .innerHTML);
+            newCell.appendChild(newText);
+        }
+        rowCount++;
+    }
+}
+var keep = null;
+
+function trClick(value) {
+    if (keep == null) {
+        value.setAttribute("class", "table-warning")
+        // document.getElementById("chooseTable").getElementsByTagName("tr")[value].setAttribute("class", "table-warning");
+    } else if (value != keep) {
+        value.setAttribute("class", "table-warning");
+        keep.removeAttribute("class", "table-warning");
+    }
+    keep = value;
+    console.log(keep)
+}
+
+function isInArray(value) {
+    var result;
+    class_ID.forEach(function(element, index) {
+        console.log(element)
+        result = element.classID.includes(value);
+    })
+    return result;
+}
+
+function moveUp() {
+    console.log(_row.previousSibling)
+    var _row = keep.parentNode;
+    //如果不是第一行，則與上一行交換順序
+    while (keep.childNodes[0].childNodes[0].nodeValue != 1) {
+        _node = _row.previousSibling;
+        var listId = keep.childNodes[0].childNodes[0].nodeValue;
+        var id = class_ID.find(function(item, index, array) {
+            return item.orderlist == listId;
+        });
+    }
+    console.log(_row, _node, _node.nodeType)
+    if (_node) {
+        swapNode(_row, _node);
     }
 
-    $.ajax({
-        type: 'POST',
-        url: "orderlist.php",
-        data: {
-            classID: class_ID
-        },
-        success: function(res) {
-            console.log(res)
-        }
-    });
+    function swapNode(node1, node2) {
+        //獲取父結點
+        var _parent = node1.parentNode;
+        //獲取兩個結點的相對位置
+        var _t1 = node1.nextSibling;
+        var _t2 = node2.nextSibling;
+        //將node2插入到原來node1的位置
+        if (_t1) _parent.insertBefore(node2, _t1);
+        else _parent.appendChild(node2);
+        //將node1插入到原來node2的位置
+        if (_t2) _parent.insertBefore(node1, _t2);
+        else _parent.appendChild(node1);
+    }
 
 }
 </script>
@@ -140,7 +216,7 @@ function choose_class() {
         </div>
         <div class="col-auto align-self-center ">
             <div class="col">
-                <button type="button" class="btn btn-secondary">
+                <button type="button" class="btn btn-secondary" onclick="moveUp()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                         class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
                         <path
@@ -156,7 +232,7 @@ function choose_class() {
                     </svg>
                 </button>
                 <div class="w-100 my-4"></div>
-                <button type="button" class="btn btn-secondary">
+                <button type="button" class="btn btn-secondary" onclick="moveDown()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                         class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
                         <path
@@ -169,10 +245,11 @@ function choose_class() {
         <div class="col">
             <div class="card mb-2">
                 <div class="card-body text-center">
-                    <table class="table table-striped table-sm" id="chooseTable">
+                    <table class="table table-striped table-sm table-hover" id="chooseTable">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+
+                                <th scope="col">志願序</th>
                                 <th scope="col">修別</th>
                                 <th scope="col">系所</th>
                                 <th scope="col">學制</th>
@@ -192,5 +269,11 @@ function choose_class() {
         </div>
     </div>
 </div>
+<style>
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+    background-color: #97CBFF;
+}
+</style>
 
 </html>
