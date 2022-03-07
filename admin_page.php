@@ -113,33 +113,33 @@
             學制
             <select class="form-control" id="kind" name="kind">
                 <option value="0">--</option>
-                <?php 
-                    foreach ($kind_result as $row){
-                    if ($row["kind_ID"] == $_GET["kind_value"]){
+                <?php
+                foreach ($kind_result as $row) {
+                    if ($row["kind_ID"] == $_GET["kind_value"]) {
                 ?>
-                <option value="<?= $row["kind_ID"]?>" selected> <?= $row["kind_name"]?></option>
-                <?php }else {?>
-                <option value=<?= $row["kind_ID"]?>><?=$row["kind_name"]?></option>
-                <?php }  }?>
+                <option value="<?= $row["kind_ID"] ?>" selected> <?= $row["kind_name"] ?></option>
+                <?php } else { ?>
+                <option value=<?= $row["kind_ID"] ?>><?= $row["kind_name"] ?></option>
+                <?php }
+                } ?>
             </select>
         </div>
         <div class="col">
             班級
             <select class="form-control" id="class" name="class">
                 <option value="0">--</option>
-                <?php 
-                    foreach ($class_result as $row){
-                    if ($row["class_ID"] == $_GET["class_value"]){
+                <?php
+                foreach ($class_result as $row) {
+                    if ($row["class_ID"] == $_GET["class_value"]) {
                 ?>
-                <option value="<?= $row["class_ID"]?>" selected> <?= $row["class_name"]?></option>
-                <?php }else {?>
-                <option value=<?= $row["class_ID"]?>><?=$row["class_name"]?></option>
-                <?php }  }?>
+                <option value="<?= $row["class_ID"] ?>" selected> <?= $row["class_name"] ?></option>
+                <?php } else { ?>
+                <option value=<?= $row["class_ID"] ?>><?= $row["class_name"] ?></option>
+                <?php }
+                } ?>
             </select>
         </div>
-        <div class="col-1">
-            <a class="btn btn-outline-secondary btn-lg m-auto" href="">查詢</a>
-        </div>
+
     </div>
 
     <div class="card w-auto p-3 mb-4 bg-light text-center">
@@ -162,14 +162,14 @@
                 <?php foreach ($result as $row) { ?>
                 <tr>
                     <td scope="row">
-                        <?=$row["ROW_ID"];?></td>
-                    <td><?=$row["course"];?></td>
-                    <td><?=$row["outkind"];?></td>
-                    <td><?=$row["kind_name"];?></td>
-                    <td><?=$row["class_name"];?></td>
-                    <td><?=$row["curriculum"];?></td>
+                        <?= $row["ROW_ID"]; ?></td>
+                    <td><?= $row["course"]; ?></td>
+                    <td><?= $row["outkind"]; ?></td>
+                    <td><?= $row["kind_name"]; ?></td>
+                    <td><?= $row["class_name"]; ?></td>
+                    <td><?= $row["curriculum"]; ?></td>
                     <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]); ?>
-                    <td><?=$row["teacherList"];?></td>
+                    <td><?= $row["teacherList"]; ?></td>
                 </tr>
                 <?php } ?>
             </tbody>
@@ -182,7 +182,7 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <?php page_maker($pages, $page);?>
+                    <?php page_maker($pages, $page); ?>
 
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Next">

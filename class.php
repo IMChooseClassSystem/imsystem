@@ -68,7 +68,7 @@
     $start = ($page-1)*$per; //每一頁開始的資料序號
     $end = $start+$per;
     //每次撈25筆資料
-    $query_page= $query_page.$query_courseInformation.' ) R WHERE ROW_ID>'.$start.' and ROW_ID<='.$end;
+    $query_page.= $query_courseInformation.' ) R WHERE ROW_ID>'.$start.' and ROW_ID<='.$end;
     $stmt = $conn->prepare($query_page);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -83,8 +83,3 @@
     /*if(isset($_GET["sort"])){
         echo class_info_maker($result);
     }*/
-  
- 
-
-
-?>
