@@ -40,8 +40,3 @@ function class_info_maker($result){
     echo "</tr>";
   } 
 }
-
-
-
-  
-?>
