@@ -8,23 +8,87 @@
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
+    /*function sort_data($sortBy) {
+        $.ajax({
+            type: 'GET',
+            url: "admin_page.php",
+            data: {
+                sort: $sortBy
+            },
+            success: function(res) {
+                alert("sucess")
+                console.log(res)
+            }
+        });
+    }*/
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+    var sort = getUrlParameter('sort');
+    var ascdesc_o = getUrlParameter('ascdesc');
+    if (ascdesc_o == "ASC") {
+        ascdesc_n = "DESC";
+    } else {
+        ascdesc_n = "ASC";
+    }
+
+    // var sort = "";
+
     function init() {
         $('#kind').change(function() {
-            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val();
+            $('#kind_value').val($('[name=kind]').val());
+            $('#showInfo').submit();
         });
         $('#class').change(function() {
-            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() +
-                '&class=' + $('[name=class]').val();
+            $('#kind_value').val($('[name=kind]').val());
+            $('#class_value').val($('[name=class]').val());
+            $('#showInfo').submit();
+
         });
         $('.page-item').click(function() {
-            location.href = "/imsystem/admin_page.php?" + 'kind=' + $('[name=kind]').val() +
-                '&class=' + $('[name=class]').val() + '&page=' + $(this).val();
+            $('#sort').val(sort);
+            $('#kind_value').val($('[name=kind]').val());
+            $('#class_value').val($('[name=class]').val());
+            $('#page').val($(this).val());
+            $('#ascdesc').val(ascdesc_o);
+            $('#showInfo').submit();
+
         });
+        $('.sortby').click(function(event) {
+            $('#sort').val($(this).attr("name"));
+            $('#kind_value').val($('[name=kind]').val());
+            $('#class_value').val($('[name=class]').val());
+            $('#ascdesc').val(ascdesc_n);
+            $('#showInfo').submit();
+
+        });
+        // console.log(sort)
     }
+
     $(document).ready(init);
     </script>
 </head>
-<?php include("class.php");include("admin_page_function.php");
+<form action="admin_page.php" method="GET" id="showInfo">
+    <input type="hidden" id="kind_value" name="kind_value" />
+    <input type="hidden" id="class_value" name="class_value" />
+    <input type="hidden" id="sort" name="sort" value="false" />
+    <input type="hidden" id="page" name="page" value=1 />
+    <input type="hidden" id="ascdesc" name="ascdesc" value="ASC" />
+</form>
+
+<?php include("class.php");
 ?>
 <div class="container-fluid">
     <header class="blog-header py-3">
@@ -51,7 +115,7 @@
                 <option value="0">--</option>
                 <?php 
                     foreach ($kind_result as $row){
-                    if ($row["kind_ID"] == $_GET["kind"]){
+                    if ($row["kind_ID"] == $_GET["kind_value"]){
                 ?>
                 <option value="<?= $row["kind_ID"]?>" selected> <?= $row["kind_name"]?></option>
                 <?php }else {?>
@@ -65,7 +129,7 @@
                 <option value="0">--</option>
                 <?php 
                     foreach ($class_result as $row){
-                    if ($row["class_ID"] == $_GET["class"]){
+                    if ($row["class_ID"] == $_GET["class_value"]){
                 ?>
                 <option value="<?= $row["class_ID"]?>" selected> <?= $row["class_name"]?></option>
                 <?php }else {?>
@@ -82,19 +146,19 @@
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">修別</th>
+                    <th scope="col"><a href="#" class="sortby" name="C.ID">#</th>
+                    <th scope="col"><a href="#" class="sortby" name="course">修別</th>
                     <th scope="col">系所</th>
-                    <th scope="col">學制</th>
-                    <th scope="col">班級</th>
-                    <th scope="col">課程名稱</th>
-                    <th scope="col">學年 / 學期(上/下)</th>
+                    <th scope="col"><a href="#" class="sortby" name="kind">學制</th>
+                    <th scope="col"><a href="#" class="sortby" name="class_name">班級</th>
+                    <th scope="col"><a href="#" class="sortby" name="curriculum">課程名稱</th>
+                    <th scope="col"><a href="#" class="sortby" name="kind_year">學年 / 學期（上/下)</th>
                     <th scope="col">學分</th>
-                    <th scope="col">時數(上課/實習)</th>
+                    <th scope="col">時數（上課/實習）</th>
                     <th scope="col"> 教師列表</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="classInfoBody">
                 <?php foreach ($result as $row) { ?>
                 <tr>
                     <td scope="row">
@@ -105,6 +169,7 @@
                     <td><?=$row["class_name"];?></td>
                     <td><?=$row["curriculum"];?></td>
                     <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]); ?>
+                    <td><?=$row["teacherList"];?></td>
                 </tr>
                 <?php } ?>
             </tbody>
