@@ -21,15 +21,46 @@ window.onload = function() {
         type: 'GET',
         url: "orderlist.php",
         data: {
-            getOrderlist: value
+            getOrderlist: value,
+
         },
         success: function(res) {
             value = false;
             memoryOrderlist = JSON.parse(res);
             loadTable(memoryOrderlist);
+
         }
     });
-
+    var load = true;
+    $.ajax({
+        type: "GET",
+        url: "showClass.php",
+        data: {
+            loadClassTable: load
+        },
+        success: function(res) {
+            load = false;
+            // console.log(JSON.parse(res).loadTable)
+            // res = JSON.parse(res);
+            // console.log(res)
+            $("#classTBody").html(res);
+            // $("#page").html(res.page);
+        }
+    });
+    var page = true;
+    $.ajax({
+        type: "GET",
+        url: "showClass.php",
+        data: {
+            getPage: page
+        },
+        success: function(res) {
+            page = false;
+            // console.log(res)
+            // $("#classTBody").html(res);
+            $("#page").html(res);
+        }
+    });
 }
 
 function choose_class() {
@@ -258,10 +289,70 @@ function saveOrderLIst() {
     } else {
         alert("您還沒填選意願表!")
     }
-
 }
+
+function changePage(page) {
+    var BChange = true;
+    $.ajax({
+        type: 'GET',
+        url: "showClass.php",
+        data: {
+            change: BChange,
+            changePage: page
+        },
+        success: function(res) {
+            // alert("s!")
+            BChange = false;
+            $("#classTBody").html(res);
+
+            // console.log(JSON.parse(res))
+        }
+    });
+    var Bpage = true;
+    $.ajax({
+        type: "GET",
+        url: "showClass.php",
+        data: {
+            CPage: Bpage,
+            changePage: page
+        },
+        success: function(res) {
+            Bpage = false;
+            console.log(res)
+            // $("#classTBody").html(res);
+            $("#page").html(res);
+        }
+    });
+}
+
+function init() {
+    var s = "";
+    $('#kind').change(function() {
+        // var s = $('#kind_value').val($('[name=kind]').val());
+
+        $.ajax({
+            type: "GET",
+            url: "showClass.php",
+            data: {
+                kind: $('[name=kind]').val()
+            },
+            success: function(res) {
+
+                $("#classTBody").html(res);
+
+            }
+        });
+    });
+    console.log($('#kind_value').val($('[name=kind]').val()))
+    $('#class').change(function() {
+        $('#kind_value').val($('[name=kind]').val());
+        $('#class_value').val($('[name=class]').val());
+
+    });
+}
+$(document).ready(init);
 </script>
-<?php include("class.php") ?>
+<?php include("showClass.php") ?>
 <div class="container-fluid">
     <header class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
@@ -283,17 +374,33 @@ function saveOrderLIst() {
     <div class="row py-1 mb-4">
         <div class="col">
             學制
-            <select class="form-control" id="kind">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+            <select class="form-control" id="kind" name="kind">
+                <option value="0">--</option>
+                <?php
+                foreach ($kind_result as $row) {
+                    if ($row["kind_ID"] == $_GET["kind"]) {
+                ?>
+                <option value="<?= $row["kind_ID"] ?>" selected> <?= $row["kind_name"] ?></option>
+                <?php } else { ?>
+                <option value=<?= $row["kind_ID"] ?>><?= $row["kind_name"] ?></option>
+                <?php }
+                } ?>
             </select>
         </div>
         <div class="col">
             班級
-            <select class="form-control" id="calss"></select>
+            <select class="form-control" id="class" name="class">
+                <option value="0">--</option>
+                <?php
+                foreach ($class_result as $row) {
+                    if ($row["class_ID"] == $_GET["class"]) {
+                ?>
+                <option value="<?= $row["class_ID"] ?>" selected> <?= $row["class_name"] ?></option>
+                <?php } else { ?>
+                <option value=<?= $row["class_ID"] ?>><?= $row["class_name"] ?></option>
+                <?php }
+                } ?>
+            </select>
         </div>
     </div>
 
@@ -319,37 +426,14 @@ function saveOrderLIst() {
                                 <th scope="col">時數</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php foreach ($result as  $row) { ?>
-                            <tr>
-                                <td><input name="CC_CB" type="checkbox" id="<?php echo $row["ID"] ?>"></td>
-                                <td><?php echo $row["course"]; ?></td>
-                                <td><?php echo $row["outkind"]; ?></td>
-                                <td><?php echo $row["kind"]; ?></td>
-                                <td><?php echo $row["getyear"]; ?></td>
-                                <td><?php echo $row["curriculum"]; ?></td>
-                                <td><?php echo $row["kindyear"]; ?></td>
-                            </tr>
-                            <?php } ?>
+                        <tbody id="classTBody">
+                            <?php class_info_maker($result) ?>
                         </tbody>
                     </table>
-                    <div class="row justify-content-center ">
+                    <div class="row justify-content-center">
                         <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <?php for ($i = 1; $i <= $pages; $i++) {
-                                    echo "<li class='page-item'><a class='page-link' href=?page=" . $i . ">$i</a><li>";
-                                } ?>
+                            <ul class="pagination" id="page">
 
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
                             </ul>
                         </nav>
                     </div>

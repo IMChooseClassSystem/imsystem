@@ -4,22 +4,14 @@ include("admin_page_function.php");
 
 $sqlfilter = "";
 
-if (empty($_GET["kind_value"]))
-    $kind_id = 0;
-else
+if (!empty($_GET["kind_value"]) && !empty($_GET["class_value"])) {
     $kind_id = $_GET["kind_value"];
-
-if (empty($_GET["class_value"]))
-    $class_id = 0;
-else
     $class_id = $_GET["class_value"];
-
-if ($kind_id > 0 && $class_id > 0)
     $sqlfilter = " where kind= " . $_GET["kind_value"] . " and getyear= " . $_GET["class_value"];
-elseif ($kind_id > 0)
+} elseif (!empty($_GET["kind_value"])) {
+    $kind_id = $_GET["kind_value"];
     $sqlfilter = " where kind= " . $_GET["kind_value"];
-else
-    $sqlfilter = "";
+}
 
 if (empty($_GET["sort"]) || $_GET["sort"] == "false")
     $column = "kind, getyear, course, kindyear";
@@ -57,6 +49,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //get 總筆數
 $data_nums = $stmt->rowCount();
 //print_r($result);
+
 //設定分頁
 $per = 25;
 $pages = ceil($data_nums / $per);
@@ -80,6 +73,6 @@ if (!empty($_GET["kind_value"])) {
     $class_sql = "SELECT * FROM class_info WHERE kind_ID=" . $_GET["kind_value"];
     $class_result = query_sql($conn, $class_sql);
 }
-    /*if(isset($_GET["sort"])){
-        echo class_info_maker($result);
-    }*/
+// if (isset($_GET["page"])) {
+//     print_r(class_info_maker($result));
+// }
