@@ -26,147 +26,141 @@ window.onload = function() {
         },
         success: function(res) {
             value = false;
-            memoryOrderlist = JSON.parse(res);
-            loadTable(memoryOrderlist);
+            // console.log(res)
+            res = JSON.parse(res)
+            $("#chooseTBody").html(res.orderListTable);
+            class_ID = res.classIDArray;
+            // console.log(class_ID.length)
+            orderCount = class_ID.length;
 
         }
     });
-    var load = true;
+
+    // var load = true;
     $.ajax({
         type: "GET",
         url: "showClass.php",
         data: {
-            loadClassTable: load
+            ajaxPost: "pageLoading"
         },
         success: function(res) {
-            load = false;
-            // console.log(JSON.parse(res).loadTable)
-            // res = JSON.parse(res);
             // console.log(res)
-            $("#classTBody").html(res);
-            // $("#page").html(res.page);
-        }
-    });
-    var page = true;
-    $.ajax({
-        type: "GET",
-        url: "showClass.php",
-        data: {
-            getPage: page
-        },
-        success: function(res) {
-            page = false;
+            res = JSON.parse(res);
             // console.log(res)
-            // $("#classTBody").html(res);
-            $("#page").html(res);
+            $("#classTBody").html(res.classTable);
+            $("#page").html(res.pages);
         }
     });
 }
 
 function choose_class() {
     var choose_class_CB = document.getElementsByName("CC_CB");
+    // var CB = $("input:checked[name='CC_CB']");
+    // console.log(CB.length)
     // add checked row
     choose_class_CB.forEach(function(element, index) {
+
         if (element.checked && isInArray(element.id) != true) {
+            // console.log(element.parentElement.parentElement)
+            var tr = element.parentElement.parentElement;
+            orderCount++;
             class_ID.push({
                 sequence: orderCount,
                 classID: element.id,
                 rowPosition: index
             });
-            orderCount++;
+
+            $("#chooseTBody").append($(tr).clone().attr("onclick", "trClick(this)"));
+            $("#chooseTBody tr").last().find("td:first").remove();
+            $("#chooseTBody tr").last().prepend("<td>" + orderCount + "</td>");
+            $("#chooseTBody tr").last().prepend(
+                "<td><button type='button' class='btn btn-sm bg-transparent'><img src='pic/close.png' alt='Flower' onclick='deleteRow(this)'></button></td>"
+            )
         }
         element.checked = false;
+
     });
-    insertTableRow();
+    // console.log(class_ID)
+
 }
 
-function loadTable(res) {
-    res.forEach(function(item, index) {
-        class_ID.push({
-            sequence: item.sequence,
-            classID: item.curriculum_ID
-        });
-        orderCount = parseInt(item.sequence) + 1;
-        var tbodyRef = document.getElementById("chooseTable").getElementsByTagName("tbody")[0];
-        // Insert a row at the end of table
-        var newRow = tbodyRef.insertRow();
-        newRow.setAttribute("onclick", "trClick(this)")
-        // Insert a cell at the end of the row
-        var newCell = newRow.insertCell();
-        //Insert delete button at td
-        var newDelBtn = document.createElement("Button");
-        newDelBtn.setAttribute("type", "button");
-        newDelBtn.setAttribute("class", "btn btn-sm bg-transparent");
-        //Insert delete img at button
-        var newImg = document.createElement("img");
-        newImg.setAttribute("src", "pic/close.png");
-        newImg.setAttribute("alt", "Flower");
-        newImg.setAttribute("onclick", "deleteRow(this)");
-        newDelBtn.appendChild(newImg);
-        newCell.append(newDelBtn);
+// function choose_class() {
+//     var choose_class_CB = $("input:checked[name='CC_CB']");
+//     // console.log(choose_class_CB.length)
+//     // add checked row
 
-        // Append a text node to the cell
-        newCell = newRow.insertCell();
-        var newText = document.createTextNode(item.sequence);
-        rowCount = parseInt(item.sequence) + 1;
-        newCell.appendChild(newText);
-        newCell = newRow.insertCell();
-        newText = document.createTextNode(item.course);
-        newCell.appendChild(newText);
-        newCell = newRow.insertCell();
-        newText = document.createTextNode(item.outkind);
-        newCell.appendChild(newText);
-        newCell = newRow.insertCell();
-        newText = document.createTextNode(item.kind);
-        newCell.appendChild(newText);
-        newCell = newRow.insertCell();
-        newText = document.createTextNode(item.getyear);
-        newCell.appendChild(newText);
-        newCell = newRow.insertCell();
-        newText = document.createTextNode(item.curriculum);
-        newCell.appendChild(newText);
-        newCell = newRow.insertCell();
-        newText = document.createTextNode(item.kindyear);
-        newCell.appendChild(newText);
-    });
-}
+//     choose_class_CB.each(function(index, element) {
+//         // console.log(element.parentElement.parentElement)
+//         var tr = element.parentElement.parentElement;
 
-function insertTableRow() {
-    for (i = rowCount; i <= class_ID.length; i++) {
-        var tbodyRef = document.getElementById("chooseTable").getElementsByTagName("tbody")[0];
-        // Insert a row at the end of table
-        var newRow = tbodyRef.insertRow();
-        newRow.setAttribute("onclick", "trClick(this)")
-        // Insert a cell at the end of the row
-        var newCell = newRow.insertCell();
-        //Insert delete button at td
-        var newDelBtn = document.createElement("Button");
-        newDelBtn.setAttribute("type", "button");
-        newDelBtn.setAttribute("class", "btn btn-sm bg-transparent");
-        //Insert delete img at button
-        var newImg = document.createElement("img");
-        newImg.setAttribute("src", "pic/close.png");
-        newImg.setAttribute("alt", "Flower");
-        newImg.setAttribute("onclick", "deleteRow(this)");
-        newDelBtn.appendChild(newImg);
-        newCell.append(newDelBtn);
+//         // console.log($(tr).find("td:first").remove())
+//         $("#chooseTBody").append($(tr).clone())
 
-        // Append a text node to the cell
-        newCell = newRow.insertCell();
-        var newText = document.createTextNode(rowCount);
-        newCell.appendChild(newText);
+//         // if (element.checked && isInArray(element.id) != true) {
+//         //     class_ID.push({
+//         //         sequence: orderCount,
+//         //         classID: element.id,
+//         //         rowPosition: index
+//         //     });
+//         //     orderCount++;
+//         // }
+//         // element.checked = false;
+//     });
+//     $("#chooseTBody > tr").slice(-choose_class_CB.length).each(function(index, element) {
+//         orderCount++;
+//         // console.log(element)
+//         class_ID.push({
+//             sequence: orderCount,
+//             classID: element.id,
+//         });
 
-        console.log(class_ID[rowCount - 1].rowPosition)
-        for (j = 1; j <= 6; j++) {
-            newCell = newRow.insertCell();
-            newText = document.createTextNode(document.getElementById("classTable").rows[class_ID[rowCount - 1]
-                    .rowPosition + 1].cells.item(j)
-                .innerHTML);
-            newCell.appendChild(newText);
-        }
-        rowCount++;
-    }
-}
+//         $(element).find("td:first").remove();
+//         $(element).prepend("<td>" + orderCount + "</td>");
+//         $(element).prepend(
+//             "<td><button type='button' class='btn btn-sm bg-transparent'><img src='pic/close.png' alt='Flower' onclick='deleteRow(this)'></button></td>"
+//         )
+//     });
+//     console.log(choose_class_CB)
+//     // insertTableRow();
+
+// }
+
+// function insertTableRow() {
+//     for (i = rowCount; i <= class_ID.length; i++) {
+//         var tbodyRef = document.getElementById("chooseTable").getElementsByTagName("tbody")[0];
+//         // Insert a row at the end of table
+//         var newRow = tbodyRef.insertRow();
+//         newRow.setAttribute("onclick", "trClick(this)")
+//         // Insert a cell at the end of the row
+//         var newCell = newRow.insertCell();
+//         //Insert delete button at td
+//         var newDelBtn = document.createElement("Button");
+//         newDelBtn.setAttribute("type", "button");
+//         newDelBtn.setAttribute("class", "btn btn-sm bg-transparent");
+//         //Insert delete img at button
+//         var newImg = document.createElement("img");
+//         newImg.setAttribute("src", "pic/close.png");
+//         newImg.setAttribute("alt", "Flower");
+//         newImg.setAttribute("onclick", "deleteRow(this)");
+//         newDelBtn.appendChild(newImg);
+//         newCell.append(newDelBtn);
+
+//         // Append a text node to the cell
+//         newCell = newRow.insertCell();
+//         var newText = document.createTextNode(rowCount);
+//         newCell.appendChild(newText);
+
+//         console.log(class_ID[rowCount - 1].rowPosition)
+//         for (j = 1; j <= 6; j++) {
+//             newCell = newRow.insertCell();
+//             newText = document.createTextNode(document.getElementById("classTable").rows[class_ID[rowCount - 1]
+//                     .rowPosition + 1].cells.item(j)
+//                 .innerHTML);
+//             newCell.appendChild(newText);
+//         }
+//         rowCount++;
+//     }
+// }
 var keep = null;
 
 function trClick(row) {
@@ -182,15 +176,19 @@ function trClick(row) {
 function deleteRow(row) {
     var delRow = row.parentNode.parentNode.parentNode;
     var delSequence = delRow.childNodes[1].textContent;
+    // console.log(delRow)
     delRow.remove();
     var tr = document.getElementById("chooseTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    // console.log(tr.length)
     class_ID.forEach(function(item, index, array) {
         if (item.sequence == delSequence) {
             array.splice(index, 1);
         }
     });
     for (i = 0; i < tr.length; i++) {
-        if (tr[i].childNodes[1].textContent > delSequence) {
+        // console.log(tr[i].childNodes[1].textContent)
+        if (parseInt(tr[i].childNodes[1].textContent) > delSequence) {
+
             tr[i].childNodes[1].textContent = tr[i].childNodes[1].textContent - 1;
         }
     }
@@ -292,63 +290,66 @@ function saveOrderLIst() {
 }
 
 function changePage(page) {
-    var BChange = true;
     $.ajax({
         type: 'GET',
         url: "showClass.php",
         data: {
-            change: BChange,
-            changePage: page
+            ajaxPost: "changePage",
+            turnPage: page,
+            kind: $('[name=kind]').val()
         },
         success: function(res) {
-            // alert("s!")
-            BChange = false;
-            $("#classTBody").html(res);
-
+            res = JSON.parse(res);
+            $("#classTBody").html(res.classTable);
+            $("#page").html(res.pages);
             // console.log(JSON.parse(res))
-        }
-    });
-    var Bpage = true;
-    $.ajax({
-        type: "GET",
-        url: "showClass.php",
-        data: {
-            CPage: Bpage,
-            changePage: page
-        },
-        success: function(res) {
-            Bpage = false;
-            console.log(res)
-            // $("#classTBody").html(res);
-            $("#page").html(res);
         }
     });
 }
 
 function init() {
-    var s = "";
-    $('#kind').change(function() {
-        // var s = $('#kind_value').val($('[name=kind]').val());
 
+    $('#kind').change(function() {
+        if ($('[name=kind]').val() == 0) {
+            kind = 0
+        }
+        // console.log($('[name=kind]').val())
         $.ajax({
             type: "GET",
             url: "showClass.php",
             data: {
+                ajaxPost: "clickKind",
                 kind: $('[name=kind]').val()
             },
             success: function(res) {
 
-                $("#classTBody").html(res);
-
+                res = JSON.parse(res);
+                $("#classTBody").html(res.classTable);
+                $("#page").html(res.pages);
+                $("#class").html(res.class)
             }
         });
     });
-    console.log($('#kind_value').val($('[name=kind]').val()))
     $('#class').change(function() {
-        $('#kind_value').val($('[name=kind]').val());
-        $('#class_value').val($('[name=class]').val());
-
+        // console.log($('[name=class]').val())
+        $.ajax({
+            type: "GET",
+            url: "showClass.php",
+            data: {
+                ajaxPost: "clickClass",
+                kind: $('[name=kind]').val(),
+                class: $('[name=class]').val()
+            },
+            success: function(res) {
+                res = JSON.parse(res)
+                $("#classTBody").html(res.classTable);
+                $("#page").html(res.pages);
+                $("#class").html(res.class)
+            }
+        });
     });
+
+
 }
 $(document).ready(init);
 </script>
@@ -380,7 +381,7 @@ $(document).ready(init);
                 foreach ($kind_result as $row) {
                     if ($row["kind_ID"] == $_GET["kind"]) {
                 ?>
-                <option value="<?= $row["kind_ID"] ?>" selected> <?= $row["kind_name"] ?></option>
+                <option value=<?= $row["kind_ID"] ?> selected> <?= $row["kind_name"] ?></option>
                 <?php } else { ?>
                 <option value=<?= $row["kind_ID"] ?>><?= $row["kind_name"] ?></option>
                 <?php }
@@ -427,7 +428,7 @@ $(document).ready(init);
                             </tr>
                         </thead>
                         <tbody id="classTBody">
-                            <?php class_info_maker($result) ?>
+
                         </tbody>
                     </table>
                     <div class="row justify-content-center">
@@ -490,7 +491,7 @@ $(document).ready(init);
                                 <th scope="col">時數</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="chooseTBody">
                         </tbody>
                     </table>
                     <button type="button" class="btn btn-primary" onclick="saveOrderLIst()">儲存</button>

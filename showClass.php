@@ -1,30 +1,20 @@
 <?php
 include_once("dbconnection.php");
-include("admin_page_function.php");
+include("teacher_page_function.php");
 
 $sqlfilter = "";
 
-if (isset($_GET["kind"]) && isset($_GET["class"])) {
-    $kind_id = $_GET["kind"];
-    $class_id = $_GET["class"];
+if (!empty($_GET["kind"]) && !empty($_GET["class"])) {
     $sqlfilter = " where kind= " . $_GET["kind"] . " and getyear= " . $_GET["class"];
-} elseif (isset($_GET["kind"])) {
-    $kind_id = $_GET["kind"];
-    $sqlfilter = " where kind= " . $_GET["kind"];
+    $class_sql = "SELECT * FROM class_info WHERE kind_ID=" . $_GET["kind"];
+    $class_result = query_sql($conn, $class_sql);
+} elseif (!empty($_GET["kind"])) {
+    if ($_GET["kind"] != 0) {
+        $sqlfilter = " where kind= " . $_GET["kind"];
+        $class_sql = "SELECT * FROM class_info WHERE kind_ID=" . $_GET["kind"];
+        $class_result = query_sql($conn, $class_sql);
+    }
 }
-
-// if (empty($_GET["class_value"]))
-//     $class_id = 0;
-// else
-//     $class_id = $_GET["class_value"];
-
-// if ($kind_id > 0 && $class_id > 0)
-//     $sqlfilter = " where kind= " . $_GET["kind_value"] . " and getyear= " . $_GET["class_value"];
-// elseif ($kind_id > 0)
-//     $sqlfilter = " where kind= " . $_GET["kind_value"];
-// else
-//     $sqlfilter = "";
-
 
 $query_courseInformation = "SELECT * FROM ( 
     SELECT distinct ROW_NUMBER() OVER (ORDER BY C.ID DESC ) as ROW_ID, C.*, K.kind_name, CI.class_name FROM curriculum C 
@@ -43,8 +33,8 @@ $data_nums = $stmt->rowCount();
 //設定分頁
 $per = 25;
 $pages = ceil($data_nums / $per);
-if (isset($_GET["changePage"])) { //假如$_GET["page"]未設置
-    $page = intval($_GET["changePage"]); //確認頁數只能夠是數值資料
+if (isset($_GET["turnPage"])) { //假如$_GET["page"]未設置
+    $page = intval($_GET["turnPage"]); //確認頁數只能夠是數值資料
 } else {
     $page = 1; //則在此設定起始頁數
 }
@@ -59,24 +49,44 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $kind_sql = "SELECT * FROM kind_info";
 $kind_result = query_sql($conn, $kind_sql);
 
-if (!empty($_GET["kind_value"])) {
-    $class_sql = "SELECT * FROM class_info WHERE kind_ID=" . $_GET["kind_value"];
-    $class_result = query_sql($conn, $class_sql);
-}
+
 // if (isset($_GET["page"])) {
 //     print_r(class_info_maker($result));
 // }
-$array = [];
-if (isset($_GET["change"]) && $_GET["change"]) {
-    echo json_encode(class_info_maker($result));
-} elseif (isset($_GET["loadClassTable"])) {
-    echo json_encode(class_info_maker($result));
+// $array = [];
+// if (isset($_GET["change"]) && $_GET["change"]) {
+//     echo json_encode(class_info_maker($result));
+// } elseif (isset($_GET["loadClassTable"])) {
+//     echo json_encode(class_info_maker($result));
+// }
+// if (isset($_GET["getPage"]) && $_GET["getPage"]) {
+//     print_r(page_makerByAjax($pages, 1));
+// } elseif (isset($_GET["CPage"]) && $_GET["CPage"]) {
+//     print_r(page_makerByAjax($pages, $_GET["changePage"]));
+// }
+// if (isset($_GET["kind"])) {
+//     echo json_encode(class_info_maker($result));
+// }
+$task = "";
+if (isset($_GET["ajaxPost"])) {
+    $task = $_GET["ajaxPost"];
 }
-if (isset($_GET["getPage"]) && $_GET["getPage"]) {
-    print_r(page_makerByAjax($pages, 1));
-} elseif (isset($_GET["CPage"]) && $_GET["CPage"]) {
-    print_r(page_makerByAjax($pages, $_GET["changePage"]));
-}
-if (isset($_GET["kind"])) {
-    echo json_encode(class_info_maker($result));
+switch ($task) {
+    case 'pageLoading':
+        # code...
+        echo json_encode(["classTable" => class_info_maker($result), "pages" => page_makerByAjax($pages, $page)]);
+        break;
+    case "changePage":
+        echo json_encode(["classTable" => class_info_maker($result), "pages" => page_makerByAjax($pages, $_GET["turnPage"])]);
+        break;
+    case "clickKind":
+        if ($_GET["kind"] != 0) {
+            echo json_encode(["classTable" => class_info_maker($result), "pages" => page_makerByAjax($pages, $page), "class" => changeClass($class_result,  0)]);
+        } else {
+            echo json_encode(["classTable" => class_info_maker($result), "pages" => page_makerByAjax($pages, $page), "class" => "<option value=0 selected>--</option>"]);
+        }
+        break;
+    case "clickClass":
+        echo json_encode(["classTable" => class_info_maker($result), "pages" => page_makerByAjax($pages, $page), "class" => changeClass($class_result,  $_GET["class"])]);
+        break;
 }
