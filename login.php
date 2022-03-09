@@ -3,7 +3,7 @@ session_start(); //啟動Session
 
 require_once("dbconnection.php");
 
-$msg="";
+$msg="您已登出";
 if(isset($_POST["account"]) && isset($_POST["password"])){
 
     $query_TeacherLogin = "SELECT * FROM teacher_account WHERE account=:account";
@@ -37,6 +37,11 @@ if(isset($_POST["account"]) && isset($_POST["password"])){
         $msg='查無此帳號，請洽系辦人員，五秒後自動導回登入畫面...';
         header("Refresh:5;url=login.html");
     }
+}
+if (isset($_GET["logout"])){
+    session_destroy();
+    $msg='您已登出，三秒後自動導回登入畫面...';
+    header("Refresh:3;url=login.html");
 }
 echo $msg; 
 

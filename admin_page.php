@@ -8,19 +8,6 @@
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
-    /*function sort_data($sortBy) {
-        $.ajax({
-            type: 'GET',
-            url: "admin_page.php",
-            data: {
-                sort: $sortBy
-            },
-            success: function(res) {
-                alert("sucess")
-                console.log(res)
-            }
-        });
-    }*/
     var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = window.location.search.substring(1),
             sURLVariables = sPageURL.split('&'),
@@ -44,7 +31,6 @@
         ascdesc_n = "ASC";
     }
 
-    // var sort = "";
 
     function init() {
         $('#kind').change(function() {
@@ -74,7 +60,6 @@
             $('#showInfo').submit();
 
         });
-        // console.log(sort)
     }
 
     $(document).ready(init);
@@ -103,7 +88,7 @@
                 <!-- <a class="text-muted" href="#" aria-label="Search">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24" focusable="false"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5"></circle><path d="M21 21l-5.2-5.2"></path></svg>
           </a> -->
-                <a class="btn btn-sm btn-outline-secondary" href="">登出</a>
+                <a class="btn btn-sm btn-outline-secondary" href="login.php?logout=1">登出</a>
             </div>
         </div>
     </header>
@@ -192,5 +177,6 @@
             </nav>
         </div>
     </div>
+    <a class="btn btn-sm btn-outline-secondary" href="export_excel.php">儲存志願序Excel</a>
 
 </html>

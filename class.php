@@ -32,7 +32,7 @@ $query_courseInformation = "SELECT distinct ROW_NUMBER() OVER (ORDER BY " . $col
     stuff((
         SELECT ',' + Convert(varchar,T.name) + '(' + Convert(varchar,OA.sequence) + ') '
         FROM orderlist OA,teacher_account T
-        WHERE OA.curriculum_ID = O.curriculum_ID and T.ID = OA.teacher_ID and OA.curriculum_ID = C.ID
+        WHERE OA.curriculum_ID = O.curriculum_ID and T.ID = OA.teacher_ID and OA.curriculum_ID = C.ID ORDER BY OA.sequence
         FOR XML PATH('')
         ),1,1,'') AS teacherList
     FROM curriculum C 
