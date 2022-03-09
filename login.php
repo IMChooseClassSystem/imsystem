@@ -27,11 +27,11 @@ if(isset($_POST["account"]) && isset($_POST["password"])){
        
     }elseif($account ==$_POST["account"] && $password == $_POST["password"] && $permission==0){
         $msg='轉換至網管頁面請稍後...';
-        header("Refresh:2;url=admin_page.php");
+        header("Refresh:0;url=admin_page.php");
        
     }elseif( $account ==$_POST["account"] && $password != $_POST["password"]){
-        $msg='密碼不正確，五秒後自動導回登入畫面...';
-        header("Refresh:5;url=login.html");
+        $msg='密碼不正確，三秒後自動導回登入畫面...';
+        header("Refresh:3;url=login.html");
         
     }else{
         $msg='查無此帳號，請洽系辦人員，五秒後自動導回登入畫面...';
@@ -41,8 +41,6 @@ if(isset($_POST["account"]) && isset($_POST["password"])){
 if (isset($_GET["logout"])){
     session_destroy();
     $msg='您已登出，三秒後自動導回登入畫面...';
-    header("Refresh:3;url=login.html");
+    header("Refresh:0;url=login.html");
 }
-echo $msg; 
-
-?>
+echo $msg;

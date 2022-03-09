@@ -30,7 +30,7 @@ function page_maker($pages, $active_page)
 function page_makerByAjax($pages, $active_page)
 {
   $str = "";
-  $str .= "<li class='page-item'><a class='page-link'  aria-label='Previous'> <span aria-hidden='true'>&laquo;</span></a></li>";
+  $str .= "<li class='page-item' ><a class='page-link'  aria-label='Previous'> <span aria-hidden='true'>&laquo;</span></a></li>";
   for ($i = 1; $i <= $pages; $i++) {
     if ($active_page == $i)
       $str .= "<li class='page-item active'  value=" . $i . "><a class='page-link' onclick='changePage(" . $i . ")' >$i</a></li>";

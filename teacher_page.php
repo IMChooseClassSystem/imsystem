@@ -55,13 +55,10 @@ window.onload = function() {
 
 function choose_class() {
     var choose_class_CB = document.getElementsByName("CC_CB");
-    // var CB = $("input:checked[name='CC_CB']");
-    // console.log(CB.length)
-    // add checked row
-    choose_class_CB.forEach(function(element, index) {
 
-        if (element.checked && isInArray(element.id) != true) {
-            // console.log(element.parentElement.parentElement)
+    choose_class_CB.forEach(function(element, index) {
+        var inArray = class_ID.filter(e => e.classID === element.id).length > 0;
+        if (element.checked && inArray != true) {
             var tr = element.parentElement.parentElement;
             orderCount++;
             class_ID.push({
@@ -200,12 +197,25 @@ function deleteRow(row) {
     rowCount--;
     orderCount--;
 }
+var result;
 
 function isInArray(value) {
     var result;
     class_ID.forEach(function(element, index) {
-        result = element.classID.includes(value);
-    })
+        // console.log(element.classID.includes(parseInt(value)))
+        result = element.classID.includes(parseInt(value));
+        // console.log(element.classID)
+        //     if (parseInt(element.classID) === parseInt(value)) {
+        //         console.log("in")
+        //         result = true;
+        //         console.log(result)
+        //     } else {
+        //         result = false;
+        //     }
+        // })
+        // console.log(result)
+        // return result;
+    });
     return result;
 }
 
