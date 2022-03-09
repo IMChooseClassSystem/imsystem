@@ -41,7 +41,6 @@
             $('#kind_value').val($('[name=kind]').val());
             $('#class_value').val($('[name=class]').val());
             $('#showInfo').submit();
-
         });
         $('.page-item').click(function() {
             $('#sort').val(sort);
