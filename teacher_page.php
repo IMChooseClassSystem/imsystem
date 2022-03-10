@@ -443,7 +443,7 @@ $(document).ready(init);
                 <option value="0">--</option>
                 <?php
                 foreach ($kind_result as $row) {
-                    if ($row["kind_ID"] == $_GET["kind"]) {
+                    if (!empty($_GET["kind"]) && $row["kind_ID"] == $_GET["kind"]) {
                 ?>
                 <option value=<?= $row["kind_ID"] ?> selected> <?= $row["kind_name"] ?></option>
                 <?php } else { ?>
@@ -457,6 +457,7 @@ $(document).ready(init);
             <select class="form-control" id="class" name="class">
                 <option value="0">--</option>
                 <?php
+                if(!empty($class_result)){
                 foreach ($class_result as $row) {
                     if ($row["class_ID"] == $_GET["class"]) {
                 ?>
@@ -464,7 +465,7 @@ $(document).ready(init);
                 <?php } else { ?>
                 <option value=<?= $row["class_ID"] ?>><?= $row["class_name"] ?></option>
                 <?php }
-                } ?>
+                }} ?>
             </select>
         </div>
     </div>
