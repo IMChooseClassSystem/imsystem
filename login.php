@@ -22,10 +22,12 @@ if(isset($_POST["account"]) && isset($_POST["password"])){
         $msg= $name.'老師您好，請稍後...';
         //伺服器get教師ID
         $_SESSION['teacherID']=$teacher_ID;
+        $_SESSION['account']=$account;
         header("Refresh:0;url=teacher_page.php");
        
        
     }elseif($account ==$_POST["account"] && $password == $_POST["password"] && $permission==0){
+        $_SESSION['account']=$account;
         $msg='轉換至網管頁面請稍後...';
         header("Refresh:0;url=admin_page.php");
        
@@ -36,6 +38,19 @@ if(isset($_POST["account"]) && isset($_POST["password"])){
     }else{
         $msg='查無此帳號，請洽系辦人員，五秒後自動導回登入畫面...';
         header("Refresh:5;url=login.html");
+    }
+}
+
+if(isset($_POST["new_passwd"])){
+    try{
+        $query_updatePwd="UPDATE teacher_account SET password=:password WHERE account=:account";
+        $stmt=$conn->prepare($query_updatePwd);
+        $stmt->execute(array(':account' => $_SESSION["account"], ':password' => $_POST["new_passwd"]));
+        session_destroy();
+        $msg='更改成功，三秒後自動導回登入畫面...';
+        header("Refresh:3;url=login.html");
+    } catch(Exception $e){
+        echo 'Caught exception: ',  $e->getMessage(), "\n";
     }
 }
 if (isset($_GET["logout"])){

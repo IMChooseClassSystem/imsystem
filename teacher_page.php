@@ -8,6 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+        integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous">
+    </script>
+
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script language="javascript">
@@ -385,11 +392,46 @@ $(document).ready(init);
             <div class="col-4 text-Left">
                 <h2 class="blog-header-logo text-dark">教師授課意願系統</h2>
             </div>
-            <div class="col-4 d-flex justify-content-end align-items-center">
-                <!-- <a class="text-muted" href="#" aria-label="Search">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24" focusable="false"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5"></circle><path d="M21 21l-5.2-5.2"></path></svg>
-          </a> -->
-                <a class="btn btn-sm btn-outline-secondary" href="login.php?logout=1">登出</a>
+            <div class="col text-right">
+                <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                    data-whatever="@getbootstrap" style="margin-right: 10px;">修改密碼</button>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">修改密碼</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="login.php" method="POST">
+                                <div class="modal-body text-left">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">請輸入舊密碼:</label>
+                                        <input type="password" class="form-control" id="old_passwd" name="old_passwd"
+                                            placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">設定您的新密碼:</label>
+                                        <input type="password" class="form-control" id="new_passwd" name="new_passwd"
+                                            placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">再次輸入新密碼:</label>
+                                        <input type="password" class="form-control" id="new_passwd_again"
+                                            name="new_passwd_again" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                    <input type="submit" class="btn btn-primary" value="確認">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div> <a class="btn btn btn-outline-secondary" href="login.php?logout=1">登出</a>
             </div>
         </div>
     </header>
