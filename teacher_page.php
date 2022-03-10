@@ -15,6 +15,7 @@ var orderCount = 1;
 var rowCount = 1;
 var class_ID = [];
 var memoryOrderlist = [];
+var classTatal = 0;
 window.onload = function() {
     var value = true;
     $.ajax({
@@ -32,6 +33,12 @@ window.onload = function() {
             class_ID = res.classIDArray;
             // console.log(class_ID.length)
             orderCount = class_ID.length;
+            class_ID.forEach(function(element, index) {
+                // console.log(element.classTotal)
+                classTatal += element.classTotal;
+            })
+            $("#classTotal").text("已選 " + classTatal + " 學分")
+
 
         }
     });
@@ -59,7 +66,10 @@ function choose_class() {
     choose_class_CB.forEach(function(element, index) {
         var inArray = class_ID.filter(e => e.classID === element.id).length > 0;
         if (element.checked && inArray != true) {
+
             var tr = element.parentElement.parentElement;
+            classTatal += parseInt(tr.childNodes[7].textContent)
+            console.log(classTatal)
             orderCount++;
             class_ID.push({
                 sequence: orderCount,
@@ -73,10 +83,12 @@ function choose_class() {
             $("#chooseTBody tr").last().prepend(
                 "<td><button type='button' class='btn btn-sm bg-transparent'><img src='pic/close.png' alt='Flower' onclick='deleteRow(this)'></button></td>"
             )
+
         }
         element.checked = false;
-
     });
+
+    $("#classTotal").text("已選 " + classTatal + " 學分")
     // console.log(class_ID)
 
 }
@@ -419,6 +431,7 @@ $(document).ready(init);
         <div class="col ">
             <div class="card mb-2">
                 <div class="card-body text-center">
+                    <H2>開課課程</H2>
                     <table class="table table-striped table-sm" id="classTable">
                         <thead>
                             <tr>
@@ -440,6 +453,7 @@ $(document).ready(init);
                         <tbody id="classTBody">
 
                         </tbody>
+
                     </table>
                     <div class="row justify-content-center">
                         <nav aria-label="Page navigation example">
@@ -482,6 +496,7 @@ $(document).ready(init);
         <div class="col">
             <div class="card mb-2">
                 <div class="card-body text-center">
+                    <H2>已選課程</H2>
                     <table class="table table-striped table-sm table-hover" id="chooseTable">
                         <thead>
                             <tr>
@@ -503,6 +518,11 @@ $(document).ready(init);
                         </thead>
                         <tbody id="chooseTBody">
                         </tbody>
+                        <TFoot>
+                            <TR>
+                                <TD colspan="10" ID="classTotal"></TD>
+                            </TR>
+                        </TFoot>
                     </table>
                     <button type="button" class="btn btn-primary" onclick="saveOrderLIst()">儲存</button>
                 </div>
