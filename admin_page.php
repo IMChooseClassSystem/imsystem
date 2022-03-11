@@ -40,6 +40,14 @@
         ascdesc_n = "ASC";
     }
 
+    function checknewpassword() {
+        if ($('#new_passwd').val() != $('#new_passwd_again').val()) {
+            $('#check_new_pass').show();
+        } else {
+            $('#check_new_pass').hide();
+        }
+    }
+
 
     function init() {
         $('#kind').change(function() {
@@ -114,17 +122,20 @@
                                         <div class="form-group">
                                             <label for="recipient-name" class="col-form-label">請輸入舊密碼:</label>
                                             <input type="password" class="form-control" id="old_passwd"
-                                                name="old_passwd" placeholder="">
+                                                name="old_passwd" placeholder="" oninput="checkpassword()">
                                         </div>
                                         <div class="form-group">
                                             <label for="recipient-name" class="col-form-label">設定您的新密碼:</label>
                                             <input type="password" class="form-control" id="new_passwd"
-                                                name="new_passwd" placeholder="">
+                                                oninput="checknewpassword()" name="new_passwd" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="recipient-name" class="col-form-label">再次輸入新密碼:</label>
                                             <input type="password" class="form-control" id="new_passwd_again"
-                                                name="new_passwd_again" placeholder="">
+                                                name="new_passwd_again" placeholder="" oninput="checknewpassword()">
+                                            <div id="check_new_pass" name="check_new_pass" style="color:red;">
+                                                與新密碼不相符
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">

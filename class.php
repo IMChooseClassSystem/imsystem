@@ -1,6 +1,7 @@
 <?php
 include("dbconnection.php");
 include("admin_page_function.php");
+session_start();
 
 $sqlfilter = "";
 
