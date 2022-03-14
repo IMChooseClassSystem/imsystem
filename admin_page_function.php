@@ -1,18 +1,22 @@
 <?php
 function sem_credit_maker($kind_year, $creditUP, $creditDN, $hourUP, $hourDN, $hourTUP, $hourTDN)
 {
-  if ($kind_year == "學期" && $creditUP != 0 && $creditDN == 0) {
+  if ($kind_year == "學期" && ($creditUP != 0 || $hourUP !=0 || $hourTUP !=0)) {
     echo "<td>" . $kind_year . "（上）</td>";
     echo "<td>" . $creditUP . "</td>";
     echo "<td>" . $hourUP . "/" . $hourTUP . "</td>";
-  } elseif ($kind_year == "學期" && $creditUP == 0 && $creditDN != 0) {
+  } elseif ($kind_year == "學期" && ($creditDN != 0 || $hourDN !=0 || $hourTDN !=0) ) {
     echo "<td>" . $kind_year . "（下）</td>";
     echo "<td>" . $creditDN . "</td>";
     echo "<td>" . $hourDN . "/" . $hourTDN . "</td>";
-  } elseif ($kind_year == "學年" && $creditUP != 0 && $creditDN != 0) {
+  } elseif ($kind_year == "學年") {
     echo "<td>" . $kind_year . "</td>";
     echo "<td>" . $creditUP . "（x2）</td>";
     echo "<td>" . $hourUP . "/" . $hourTUP . "（x2）</td>";
+  } else {
+    echo "<td>" . $kind_year . "</td>";
+    echo "<td>" . $creditUP . "</td>";
+    echo "<td>" . $hourUP . "/" . $hourTUP . "</td>";
   }
 }
 
