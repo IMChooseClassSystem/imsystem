@@ -74,6 +74,9 @@ if (!empty($_GET["kind_value"])) {
     $class_sql = "SELECT * FROM class_info WHERE kind_ID=" . $_GET["kind_value"];
     $class_result = query_sql($conn, $class_sql);
 }
-// if (isset($_GET["page"])) {
-//     print_r(class_info_maker($result));
-// }
+
+if(!empty($_POST["ID"])){
+    $delete_sql = "DELETE FROM curriculum WHERE ID=:class_id ";
+    $stmt=$conn->prepare($delete_sql);
+    $stmt->execute(array(':class_id' => $_POST["ID"]));
+}

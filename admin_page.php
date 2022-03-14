@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
         integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous">
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript">
     var getUrlParameter = function getUrlParameter(sParam) {
@@ -46,6 +46,24 @@
         } else {
             $('#check_new_pass').hide();
         }
+    }
+
+    function deleteCurriculum(class_id) {
+        $check_result = window.confirm('確定要刪除嗎');
+        if ($check_result == true) {
+            $.ajax({
+                type: 'POST',
+                url: "class.php",
+                data: {
+                    ID: class_id
+                },
+                success: function(res) {
+                    alert("刪除成功!");
+                    location.reload();
+                }
+            });
+        }
+
     }
 
 
@@ -201,10 +219,12 @@
                         <th scope="col">學分</th>
                         <th scope="col">時數（上課/實習）</th>
                         <th scope="col"> 教師列表</th>
+                        <th scope="col"> 操作</th>
                     </tr>
                 </thead>
                 <tbody id="classInfoBody">
-                    <?php foreach ($result as $row) { ?>
+                    <?php foreach ($result as $row) { 
+                        $class_id = $row["ID"];?>
                     <tr>
                         <td scope="row">
                             <?= $row["ROW_ID"]; ?></td>
@@ -215,6 +235,7 @@
                         <td><?= $row["curriculum"]; ?></td>
                         <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]); ?>
                         <td><?= $row["teacherList"]; ?></td>
+                        <td><button onclick="deleteCurriculum(<?=$class_id?>)">刪除</button></td>
                     </tr>
                     <?php } ?>
                 </tbody>
