@@ -29,7 +29,8 @@ function orderlistTable($result)
 {
     $str = "";
     $array = [];
-    $total = 0;
+    $class_UP = 0;
+    $class_DN = 0;
     foreach ($result as $row) {
         $str .= "<tr onclick='trClick(this)'>";
         $str .= "<td><button type='button' class='btn btn-sm bg-transparent'><img src='pic/close.png' alt='Flower' onclick='deleteRow(this)'></button></td>";
@@ -41,8 +42,9 @@ function orderlistTable($result)
         $str .= "<td>" . $row["curriculum"] . "</td>";
         $str .= sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]);
         $str .= "</tr>";
-        $total = $row["creditUP"] + $row["creditDN"];
-        array_push($array, ["sequence" => $row["sequence"], "classID" => $row["curriculum_ID"], "classTotal" => $total]);
+        $class_UP = $row["creditUP"] ;
+        $class_DN= $row["creditDN"];
+        array_push($array, ["sequence" => $row["sequence"], "classID" => $row["curriculum_ID"], "classUp" => $class_UP,"classDn" => $class_DN]);
     }
     echo json_encode(["orderListTable" => $str, "classIDArray" => $array]);
 }

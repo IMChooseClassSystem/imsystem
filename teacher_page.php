@@ -23,6 +23,9 @@ var rowCount = 1;
 var class_ID = [];
 var memoryOrderlist = [];
 var classTatal = 0;
+var class_UP = 0;
+var class_DN = 0;
+var course = "";
 window.onload = function() {
     var value = true;
     $.ajax({
@@ -42,9 +45,11 @@ window.onload = function() {
             orderCount = class_ID.length;
             class_ID.forEach(function(element, index) {
                 // console.log(element.classTotal)
-                classTatal += element.classTotal;
+                class_UP += parseInt(element.classUp);
+                class_DN += parseInt(element.classDn);
             })
-            $("#classTotal").text("已選 " + classTatal + " 學分")
+            //$("#classTotal").text("已選 " + classTatal + " 學分")
+            $("#classTotal").text("上學期已選 : " + class_UP + " 學分，下學期已選 : " + class_DN + " 學分")
 
 
         }
@@ -76,7 +81,12 @@ function choose_class() {
 
             var tr = element.parentElement.parentElement;
             classTatal += parseInt(tr.childNodes[7].textContent)
-            console.log(classTatal)
+            course = tr.childNodes[6].textContent
+            if (course == "學期（上）")
+                class_UP += parseInt(tr.childNodes[7].textContent)
+            else if (course == "學期（下）")
+                class_DN += parseInt(tr.childNodes[7].textContent)
+            console.log(course)
             orderCount++;
             class_ID.push({
                 sequence: orderCount,
@@ -95,7 +105,7 @@ function choose_class() {
         element.checked = false;
     });
 
-    $("#classTotal").text("已選 " + classTatal + " 學分")
+    $("#classTotal").text("上學期已選 : " + class_UP + " 學分，下學期已選 : " + class_DN + " 學分")
     // console.log(class_ID)
 
 }
@@ -240,7 +250,7 @@ function isInArray(value) {
 
 function moveUp() {
     if (keep) {
-        //如果不是第一行，則與上一行交換順序
+        //如果不是第��行，則與上一行交換順序
         if (keep.childNodes[1].textContent != 1) {
             var node = keep.previousSibling;
         }
@@ -483,9 +493,9 @@ $(document).ready(init);
     </div>
 
     <div class="row">
-        <div class="col ">
+        <div class="col-6 ">
             <div class="card mb-2">
-                <div class="card-body text-center">
+                <div class="card-body text-center table-responsive ">
                     <H2>開課課程</H2>
                     <table class="table table-striped table-sm" id="classTable">
                         <thead>
@@ -502,7 +512,7 @@ $(document).ready(init);
                                 <th scope="col">課程名稱</th>
                                 <th scope="col">學年 / 學期</th>
                                 <th scope="col">學分</th>
-                                <th scope="col">時數</th>
+                                <th scope="col">時數<br>(上課/實習)</th>
                             </tr>
                         </thead>
                         <tbody id="classTBody">
@@ -548,7 +558,7 @@ $(document).ready(init);
                 </button>
             </div>
         </div>
-        <div class="col">
+        <div class="col-auto">
             <div class="card mb-2">
                 <div class="card-body text-center">
                     <H2>已選課程</H2>
@@ -568,7 +578,7 @@ $(document).ready(init);
                                 <th scope="col">課程名稱</th>
                                 <th scope="col">學年 / 學期</th>
                                 <th scope="col">學分</th>
-                                <th scope="col">時數</th>
+                                <th scope="col">時數<br>(上課/實習)</th>
                             </tr>
                         </thead>
                         <tbody id="chooseTBody">
