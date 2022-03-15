@@ -558,11 +558,11 @@ $(document).ready(init);
                 </button>
             </div>
         </div>
-        <div class="col-auto">
+        <div class="col-5">
             <div class="card mb-2">
-                <div class="card-body text-center">
+                <div class="card-body text-center ">
                     <H2>已選課程</H2>
-                    <table class="table table-striped table-sm table-hover" id="chooseTable">
+                    <table class="table table-striped table-sm table-hover " id="chooseTable">
                         <thead>
                             <tr>
                                 <th scope="col"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
