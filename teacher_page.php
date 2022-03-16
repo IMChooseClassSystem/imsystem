@@ -321,6 +321,7 @@ function saveOrderLIst() {
             },
             success: function(res) {
                 alert("儲存成功!")
+                location.reload();
             }
         });
     } else {
@@ -530,7 +531,19 @@ $(document).ready(init);
                 </div>
             </div>
         </div>
-        <div class="col-auto align-self-center ">
+        <div class="col-0.5 align-self-center  ">
+            <div class="col">
+                <div class="my-4"></div>
+                <button type="button" class="btn btn-success" onclick="choose_class()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="col-0.5">
             <div class="col">
                 <button type="button" class="btn btn-warning" onclick="moveUp()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
@@ -539,15 +552,8 @@ $(document).ready(init);
                             d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
                     </svg>
                 </button>
-                <div class="w-100 my-4"></div>
-                <button type="button" class="btn btn-success" onclick="choose_class()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                        class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
-                    </svg>
-                </button>
-                <div class="w-100 my-4"></div>
+
+                <div class=" my-4"></div>
                 <button type="button" class="btn btn-warning" onclick="moveDown()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                         class="bi bi-arrow-down-circle-fill white" viewBox="0 0 16 16">
@@ -557,6 +563,7 @@ $(document).ready(init);
                     </svg>
                 </button>
             </div>
+
         </div>
         <div class="col-5">
             <div class="card mb-2">
