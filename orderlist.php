@@ -8,7 +8,17 @@ if (isset($_GET['getOrderlist']) && $_GET['getOrderlist']) {
     $statement->execute();
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     // echo json_encode($result);
-    orderlistTable($result);
+    $sql_remark = "select remark,over_class from orderlist_remark where teacher_ID = " . $_SESSION["teacherID"];
+    $stmt = $conn->prepare($sql_remark);
+    $stmt->execute();
+    $result_remark = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $remark = "";
+    $overClass = 0;
+    foreach ($result_remark as $row) {
+        $remark = $row["remark"];
+        $overClass = $row["over_class"];
+    }
+    orderlistTable($result, $remark, $overClass);
 } else if (isset($_GET["classIDArray"])) {
     //每次儲存都清空
     $sql = "DELETE FROM orderlist WHERE teacher_ID =" . $_SESSION["teacherID"];
@@ -23,9 +33,19 @@ if (isset($_GET['getOrderlist']) && $_GET['getOrderlist']) {
     foreach ($_GET["classIDArray"] as $key => $value) {
         $stmt->execute([$_SESSION["teacherID"], $value["classID"], $value["sequence"]]);
     }
-    print_r($_GET["classIDArray"]);
+    //每次儲存都清空
+    $sql = "DELETE FROM orderlist_remark WHERE teacher_ID =" . $_SESSION["teacherID"];
+    //Prepare the SQL query.
+    $statement = $conn->prepare($sql);
+    //Execute the statement.
+    $statement->execute();
+    $sql = "Insert into orderlist_remark(remark,over_class,teacher_ID) values(?,?,?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$_GET["otherClass"], $_GET["overClass"], $_SESSION["teacherID"]]);
+    echo json_encode(["classIDArray" => $_GET["classIDArray"], "remark" => $_GET["otherClass"]]);
+    // print_r($_GET["classIDArray"], $_GET["otherClass"]);
 }
-function orderlistTable($result)
+function orderlistTable($result, $remark, $overClass)
 {
     $str = "";
     $array = [];
@@ -42,9 +62,9 @@ function orderlistTable($result)
         $str .= "<td>" . $row["curriculum"] . "</td>";
         $str .= sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]);
         $str .= "</tr>";
-        $class_UP = $row["creditUP"] ;
-        $class_DN= $row["creditDN"];
-        array_push($array, ["sequence" => $row["sequence"], "classID" => $row["curriculum_ID"], "classUp" => $class_UP,"classDn" => $class_DN]);
+        $class_UP = $row["creditUP"];
+        $class_DN = $row["creditDN"];
+        array_push($array, ["sequence" => $row["sequence"], "classID" => $row["curriculum_ID"], "classUp" => $class_UP, "classDn" => $class_DN]);
     }
-    echo json_encode(["orderListTable" => $str, "classIDArray" => $array]);
+    echo json_encode(["orderListTable" => $str, "classIDArray" => $array, "remark" => $remark, "overClass" => $overClass]);
 }

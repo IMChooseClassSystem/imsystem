@@ -49,9 +49,13 @@ window.onload = function() {
                 class_DN += parseInt(element.classDn);
             })
             //$("#classTotal").text("已選 " + classTatal + " 學分")
-            $("#classTotal").text("上學期已選 : " + class_UP + " 學分，下學期已選 : " + class_DN + " 學分")
-
-
+            $("#classTotal").text("上學期已選 : " + class_UP + " 學分，下學期已選 : " + class_DN + " 學分");
+            $("#otherClasses").text(res.remark);
+            if (res.overClass == 0) {
+                $('input:radio[name="overClassRadio"]').filter('[value="0"]').attr('checked', true);
+            } else {
+                $('input:radio[name="overClassRadio"]').filter('[value="1"]').attr('checked', true);
+            }
         }
     });
 
@@ -317,11 +321,14 @@ function saveOrderLIst() {
             type: 'GET',
             url: "orderlist.php",
             data: {
-                classIDArray: class_ID
+                classIDArray: class_ID,
+                otherClass: $("#otherClasses").val(),
+                overClass: $("input[name=overClassRadio]:checked").val()
             },
             success: function(res) {
                 alert("儲存成功!")
-                location.reload();
+                // console.log(res)
+                // location.reload();
             }
         });
     } else {
@@ -458,7 +465,6 @@ $(document).ready(init);
             </div>
         </div>
     </header>
-
     <div class="row py-1 mb-4">
         <div class="col">
             學制
@@ -480,25 +486,26 @@ $(document).ready(init);
             <select class="form-control" id="class" name="class">
                 <option value="0">--</option>
                 <?php
-                if(!empty($class_result)){
-                foreach ($class_result as $row) {
-                    if ($row["class_ID"] == $_GET["class"]) {
+                if (!empty($class_result)) {
+                    foreach ($class_result as $row) {
+                        if ($row["class_ID"] == $_GET["class"]) {
                 ?>
                 <option value="<?= $row["class_ID"] ?>" selected> <?= $row["class_name"] ?></option>
                 <?php } else { ?>
                 <option value=<?= $row["class_ID"] ?>><?= $row["class_name"] ?></option>
                 <?php }
-                }} ?>
+                    }
+                } ?>
             </select>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-6 ">
+        <div class="col">
             <div class="card mb-2">
                 <div class="card-body text-center table-responsive ">
                     <H2>開課課程</H2>
-                    <table class="table table-striped table-sm" id="classTable">
+                    <table class="table table-striped table-sm " id="classTable">
                         <thead>
                             <tr>
                                 <th scope="col"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -524,52 +531,27 @@ $(document).ready(init);
                     <div class="row justify-content-center">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination" id="page">
-
                             </ul>
                         </nav>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-0.5 align-self-center  ">
-            <div class="col">
-                <div class="my-4"></div>
-                <button type="button" class="btn btn-success" onclick="choose_class()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                        class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
-                    </svg>
-                </button>
-            </div>
+        <div class="col-auto align-self-center ">
+            <button type="button" class="btn btn-success" onclick="choose_class()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                    class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
+                </svg>
+            </button>
         </div>
-        <div class="col-0.5">
-            <div class="col">
-                <button type="button" class="btn btn-warning" onclick="moveUp()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                        class="bi bi-arrow-up-circle-fill white" viewBox="0 0 16 16">
-                        <path
-                            d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
-                    </svg>
-                </button>
 
-                <div class=" my-4"></div>
-                <button type="button" class="btn btn-warning" onclick="moveDown()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                        class="bi bi-arrow-down-circle-fill white" viewBox="0 0 16 16">
-                        <path
-                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-
-        </div>
-        <div class="col-5">
+        <div class="col">
             <div class="card mb-2">
-                <div class="card-body text-center ">
+                <div class="card-body text-center table-responsive">
                     <H2>已選課程</H2>
-                    <table class="table table-striped table-sm table-hover " id="chooseTable">
+                    <table class="table table-striped table-sm table-hover  " id="chooseTable">
                         <thead>
                             <tr>
                                 <th scope="col"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -590,15 +572,60 @@ $(document).ready(init);
                         </thead>
                         <tbody id="chooseTBody">
                         </tbody>
-                        <TFoot>
-                            <TR>
-                                <TD colspan="10" ID="classTotal"></TD>
-                            </TR>
-                        </TFoot>
+                        <tfoot>
+                            <tr>
+                                <td colspan="10" ID="classTotal"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="align-middle text-center">
+                                    是否於外系授課<br>請寫下外系課程
+                                </td>
+                                <td colspan="8">
+                                    <textarea class="form-control" id="otherClasses" rows="3"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" class="text-left ">
+                                    是否要超鐘點
+                                </td>
+                                <td><input class="form-check-input" type="radio" id="overclassY" value="1"
+                                        name="overClassRadio">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        是
+                                    </label>
+                                </td>
+                                <td>
+                                    <input class="form-check-input" type="radio" value="0" id="overclassN"
+                                        name="overClassRadio" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        否
+                                    </label>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                     <button type="button" class="btn btn-primary" onclick="saveOrderLIst()">儲存</button>
                 </div>
             </div>
+        </div>
+        <div class="col-auto ">
+            <button type="button" class="btn btn-warning" onclick="moveUp()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                    class="bi bi-arrow-up-circle-fill white" viewBox="0 0 16 16">
+                    <path
+                        d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
+                </svg>
+            </button>
+            <div class=" my-4"></div>
+            <button type="button" class="btn btn-warning" onclick="moveDown()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                    class="bi bi-arrow-down-circle-fill white" viewBox="0 0 16 16">
+                    <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z">
+                    </path>
+                </svg>
+            </button>
+
         </div>
     </div>
 </div>
