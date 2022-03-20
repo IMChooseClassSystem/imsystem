@@ -142,7 +142,7 @@
         <input type="hidden" id="ascdesc" name="ascdesc" value="ASC" />
     </form>
 
-    <?php include("class.php");?>
+    <?php include("class.php"); ?>
 
     <div class="container-fluid">
         <header class="blog-header py-3">
@@ -157,6 +157,8 @@
 
                     <a class="btn btn-outline-secondary" href="export_excel.php"
                         style="margin-right: 10px;">儲存志願序Excel</a>
+                    <a class="btn btn-outline-secondary" href="excel_remark.php"
+                        style="margin-right: 10px;">儲存外系授課與超鐘點Excel</a>
                     <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#selectpassword"
                         data-whatever="@getbootstrap" style="margin-right: 10px;">查詢教師密碼</button>
                     <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#editpassword"
@@ -174,14 +176,14 @@
                 <select class="form-control" id="kind" name="kind">
                     <option value="0">--</option>
                     <?php
-                foreach ($kind_result as $row) {
-                    if (!empty($_GET["kind_value"]) && $row["kind_ID"] == $_GET["kind_value"]) {
-                ?>
+                    foreach ($kind_result as $row) {
+                        if (!empty($_GET["kind_value"]) && $row["kind_ID"] == $_GET["kind_value"]) {
+                    ?>
                     <option value="<?= $row["kind_ID"] ?>" selected> <?= $row["kind_name"] ?></option>
                     <?php } else { ?>
                     <option value=<?= $row["kind_ID"] ?>><?= $row["kind_name"] ?></option>
                     <?php }
-                } ?>
+                    } ?>
                 </select>
             </div>
             <div class="col">
@@ -189,15 +191,16 @@
                 <select class="form-control" id="class" name="class">
                     <option value="0">--</option>
                     <?php
-                if(!empty($class_result)){
-                foreach ($class_result as $row) {
-                    if ($row["class_ID"] == $_GET["class_value"]) {
-                ?>
+                    if (!empty($class_result)) {
+                        foreach ($class_result as $row) {
+                            if ($row["class_ID"] == $_GET["class_value"]) {
+                    ?>
                     <option value="<?= $row["class_ID"] ?>" selected> <?= $row["class_name"] ?></option>
                     <?php } else { ?>
                     <option value=<?= $row["class_ID"] ?>><?= $row["class_name"] ?></option>
                     <?php }
-                }} ?>
+                        }
+                    } ?>
                 </select>
             </div>
         </div>
@@ -220,8 +223,8 @@
                     </tr>
                 </thead>
                 <tbody id="classInfoBody">
-                    <?php foreach ($result as $row) { 
-                        $curriculum_id = $row["ID"];?>
+                    <?php foreach ($result as $row) {
+                        $curriculum_id = $row["ID"]; ?>
                     <tr>
                         <td scope="row">
                             <?= $row["ROW_ID"]; ?></td>
@@ -232,7 +235,7 @@
                         <td><?= $row["curriculum"]; ?></td>
                         <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]); ?>
                         <td><?= $row["teacherList"]; ?></td>
-                        <td><button onclick="deleteCurriculum(<?=$curriculum_id?>)">刪除</button></td>
+                        <td><button onclick="deleteCurriculum(<?= $curriculum_id ?>)">刪除</button></td>
                     </tr>
                     <?php } ?>
                 </tbody>
