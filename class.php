@@ -91,9 +91,9 @@ if(!empty($_POST["teacher_name"]) && !empty($_POST["teacher_account"]) && !empty
     $account_result=$stmt->fetch(PDO::FETCH_ASSOC);
 
     if(!empty($name_result["name"]) && $name_result["name"]==$_POST["teacher_name"])
-        echo "此位老師已創建帳號";
+        echo "此位教師已創建帳號";
     elseif(!empty($account_result["account"]))
-        echo "此帳號已有人使用";
+        echo "此帳號已使用";
     else{
         $insert_account_sql = "INSERT INTO teacher_account(account, password, name, permission) VALUES(:account, :password,:name, 1)";
         $stmt=$conn->prepare($insert_account_sql);

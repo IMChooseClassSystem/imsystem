@@ -83,7 +83,7 @@
                 } else {
                     $('#teacher_account').val("");
                     $('#teacher_password').val("");
-                    $('#check_teacher').html("<p style=\"color:red\">查詢失敗，請輸入正確導師姓名")
+                    $('#check_teacher').html("<p style=\"color:red\">查詢失敗，請輸入正確教師姓名")
                 }
 
             }
@@ -328,7 +328,7 @@
                     </div>
                     <div class="modal-body text-left">
                         <div class="form-group">
-                            <label for="teacher_name" class="col-form-label ">導師姓名:
+                            <label for="teacher_name" class="col-form-label ">教師姓名:
                             </label>
                             <input type="text" class="form-control" id="teacher_name" name="teacher_name"
                                 aria-describedby="selectHelp" value="">
@@ -337,13 +337,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="teacher_account" class="col-form-label">導師帳號:</label>
+                            <label for="teacher_account" class="col-form-label">教師帳號:</label>
                             <input type="text" class="form-control" id="teacher_account" name="teacher_account"
                                 value="">
                         </div>
                         <div class="form-group ">
 
-                            <label for="teacher_password" class="col-form-label">導師密碼:</label>
+                            <label for="teacher_password" class="col-form-label">教師密碼:</label>
                             <div class="input-group">
                                 <input type="password" class="form-control" id="teacher_password"
                                     aria-describedby="toggle-password" name="teacher_password" value="">
