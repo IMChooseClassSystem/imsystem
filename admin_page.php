@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
@@ -48,14 +48,14 @@
         }
     }
 
-    function deleteCurriculum(class_id) {
+    function deleteCurriculum(curriculum_id) {
         $check_result = window.confirm('確定要刪除嗎');
         if ($check_result == true) {
             $.ajax({
                 type: 'POST',
                 url: "class.php",
                 data: {
-                    ID: class_id
+                    ID: curriculum_id
                 },
                 success: function(res) {
                     alert("刪除成功!");
@@ -65,6 +65,31 @@
         }
 
     }
+
+    function select_teacher_info() {
+        $.ajax({
+            type: 'POST',
+            url: "class.php",
+            data: {
+                teacher_name: $('#teacher_name').val()
+            },
+            success: function(res) {
+                res = JSON.parse(res);
+                if (res["name"] == $('#teacher_name').val()) {
+                    $('#teacher_account').val(res["account"]);
+                    $('#teacher_password').val(res["password"]);
+                    $('#teacher_password').attr("type", "password");
+                    $('#check_teacher').html("<p style=\"color:green\">查詢成功")
+                } else {
+                    $('#teacher_account').val("");
+                    $('#teacher_password').val("");
+                    $('#check_teacher').html("<p style=\"color:red\">查詢失敗，請輸入正確導師姓名")
+                }
+
+            }
+        });
+    }
+
 
 
     function init() {
@@ -86,15 +111,22 @@
             $('#showInfo').submit();
 
         });
-        $('.sortby').click(function(event) {
+        $('.sortby').click(function() {
             $('#sort').val($(this).attr("name"));
             $('#kind_value').val($('[name=kind]').val());
             $('#class_value').val($('[name=class]').val());
             $('#ascdesc').val(ascdesc_n);
             $('#showInfo').submit();
         });
+        $("#toggle-password").click(function() {
+            var input = $("#teacher_password");
+            if (input.attr("type") === "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
 
-
+        });
     }
 
     $(document).ready(init);
@@ -122,48 +154,13 @@
                     <h2 class="blog-header-logo text-dark">教師授課意願系統</h2>
                 </div>
                 <div class="col text-right">
-                    <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-                        data-whatever="@getbootstrap" style="margin-right: 10px;">修改密碼</button>
 
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">修改密碼</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form action="login.php" method="POST">
-                                    <div class="modal-body text-left">
-                                        <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">請輸入舊密碼:</label>
-                                            <input type="password" class="form-control" id="old_passwd"
-                                                name="old_passwd" placeholder="" oninput="checkpassword()">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">設定您的新密碼:</label>
-                                            <input type="password" class="form-control" id="new_passwd"
-                                                oninput="checknewpassword()" name="new_passwd" placeholder="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">再次輸入新密碼:</label>
-                                            <input type="password" class="form-control" id="new_passwd_again"
-                                                name="new_passwd_again" placeholder="" oninput="checknewpassword()">
-                                            <div id="check_new_pass" name="check_new_pass" style="color:red;">
-                                                與新密碼不相符
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                        <input type="submit" class="btn btn-primary" value="確認">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <a class="btn btn-outline-secondary" href="export_excel.php"
+                        style="margin-right: 10px;">儲存志願序Excel</a>
+                    <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#selectpassword"
+                        data-whatever="@getbootstrap" style="margin-right: 10px;">查詢教師密碼</button>
+                    <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#editpassword"
+                        data-whatever="@getbootstrap" style="margin-right: 10px;">修改密碼</button>
                     <a class="btn btn-outline-secondary" href="login.php?logout=1">登出</a>
                 </div>
 
@@ -224,7 +221,7 @@
                 </thead>
                 <tbody id="classInfoBody">
                     <?php foreach ($result as $row) { 
-                        $class_id = $row["ID"];?>
+                        $curriculum_id = $row["ID"];?>
                     <tr>
                         <td scope="row">
                             <?= $row["ROW_ID"]; ?></td>
@@ -235,7 +232,7 @@
                         <td><?= $row["curriculum"]; ?></td>
                         <?php sem_credit_maker($row["kindyear"], $row["creditUP"], $row["creditDN"], $row["hourUP"], $row["hourDN"], $row["hourTUP"], $row["hourTDN"]); ?>
                         <td><?= $row["teacherList"]; ?></td>
-                        <td><button onclick="deleteCurriculum(<?=$class_id?>)">刪除</button></td>
+                        <td><button onclick="deleteCurriculum(<?=$curriculum_id?>)">刪除</button></td>
                     </tr>
                     <?php } ?>
                 </tbody>
@@ -259,7 +256,96 @@
                 </nav>
             </div>
         </div>
-        <a class="btn btn-sm btn-outline-secondary" href="export_excel.php">儲存志願序Excel</a>
+
+        <!--修改密碼區塊 -->
+        <div class="modal fade" id="editpassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">修改密碼</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="login.php" method="POST">
+                        <div class="modal-body text-left">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">請輸入舊密碼:</label>
+                                <input type="password" class="form-control" id="old_passwd" name="old_passwd"
+                                    placeholder="" oninput="checkpassword()">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">設定您的新密碼:</label>
+                                <input type="password" class="form-control" id="new_passwd" oninput="checknewpassword()"
+                                    name="new_passwd" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">再次輸入新密碼:</label>
+                                <input type="password" class="form-control" id="new_passwd_again"
+                                    name="new_passwd_again" placeholder="" oninput="checknewpassword()">
+                                <div id="check_new_pass" name="check_new_pass" style="color:red;">
+                                    與新密碼不相符
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <input type="submit" class="btn btn-primary" value="確認">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--修改密碼區塊 -->
+
+        <!--查詢密碼 -->
+        <div class="modal fade" id="selectpassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe2"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabe2">查詢教師密碼</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-left">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">請輸入導師姓名:</label>
+                            <input type="text" class="form-control" id="teacher_name" name="teacher_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">導師帳號:</label>
+                            <input type="text" class="form-control" id="teacher_account" name="teacher_account"
+                                value="">
+                        </div>
+                        <div class="form-group ">
+
+                            <label for="recipient-name" class="col-form-label">導師密碼:</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="teacher_password"
+                                    aria-describedby="toggle-password" name="teacher_password" value="">
+                                <button class="btn btn-outline-secondary" id="toggle-password"><i
+                                        class="bi bi-eye-slash"></i></button>
+                            </div>
+
+                        </div>
+                        <div id="check_teacher" name="check_teacher">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="select_teacher_info()">查詢</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">完成</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--修改密碼區塊 -->
+
 </body>
 
 </html>

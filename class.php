@@ -1,7 +1,6 @@
 <?php
 include("dbconnection.php");
 include("admin_page_function.php");
-session_start();
 
 $sqlfilter = "";
 
@@ -79,4 +78,13 @@ if(!empty($_POST["ID"])){
     $delete_sql = "DELETE FROM curriculum WHERE ID=:class_id ";
     $stmt=$conn->prepare($delete_sql);
     $stmt->execute(array(':class_id' => $_POST["ID"]));
+}
+
+if(!empty($_POST["teacher_name"])){
+    $select_name_sql = "SELECT * FROM teacher_account  WHERE name=:name";
+    $stmt=$conn->prepare($select_name_sql);
+    $stmt->execute(array(':name' => $_POST["teacher_name"]));
+    $teacher_result=$stmt->fetch(PDO::FETCH_ASSOC);
+    //print_r($teacher_result);
+    echo json_encode($teacher_result);
 }
