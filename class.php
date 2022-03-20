@@ -79,8 +79,29 @@ if(!empty($_POST["ID"])){
     $stmt=$conn->prepare($delete_sql);
     $stmt->execute(array(':class_id' => $_POST["ID"]));
 }
+if(!empty($_POST["teacher_name"]) && !empty($_POST["teacher_account"]) && !empty($_POST["teacher_password"] )){
+    $select_name_sql = "SELECT * FROM teacher_account  WHERE name=:name";
+    $stmt=$conn->prepare($select_name_sql);
+    $stmt->execute(array(':name' => $_POST["teacher_name"]));
+    $name_result=$stmt->fetch(PDO::FETCH_ASSOC);
 
-if(!empty($_POST["teacher_name"])){
+    $select_account_sql = "SELECT * FROM teacher_account  WHERE account=:account";
+    $stmt=$conn->prepare($select_account_sql);
+    $stmt->execute(array(':account' => $_POST["teacher_account"]));
+    $account_result=$stmt->fetch(PDO::FETCH_ASSOC);
+
+    if(!empty($name_result["name"]) && $name_result["name"]==$_POST["teacher_name"])
+        echo "此位老師已創建帳號";
+    elseif(!empty($account_result["account"]))
+        echo "此帳號已有人使用";
+    else{
+        $insert_account_sql = "INSERT INTO teacher_account(account, password, name, permission) VALUES(:account, :password,:name, 1)";
+        $stmt=$conn->prepare($insert_account_sql);
+        $stmt->execute(array(':account' => $_POST["teacher_account"], ':password'=> $_POST["teacher_password"], ':name'=> $_POST["teacher_name"]));
+        echo "新增成功";
+    }
+}
+else if(!empty($_POST["teacher_name"])){
     $select_name_sql = "SELECT * FROM teacher_account  WHERE name=:name";
     $stmt=$conn->prepare($select_name_sql);
     $stmt->execute(array(':name' => $_POST["teacher_name"]));
