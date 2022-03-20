@@ -328,7 +328,7 @@ function saveOrderLIst() {
             success: function(res) {
                 alert("儲存成功!")
                 // console.log(res)
-                // location.reload();
+                location.reload();
             }
         });
     } else {
