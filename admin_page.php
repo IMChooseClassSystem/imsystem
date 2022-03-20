@@ -83,13 +83,29 @@
                 } else {
                     $('#teacher_account').val("");
                     $('#teacher_password').val("");
-                    $('#check_teacher').html("<p style=\"color:red\">查詢失敗，請輸入正確導師姓名")
+                    $('#check_teacher').html("<p style=\"color:red\">查詢失敗，請輸入正確教師姓名")
                 }
 
             }
         });
     }
 
+    function insert_teacher() {
+        $.ajax({
+            type: 'POST',
+            url: "class.php",
+            data: {
+                teacher_name: $('#teacher_name').val(),
+                teacher_account: $('#teacher_account').val(),
+                teacher_password: $('#teacher_password').val()
+            },
+            success: function(res) {
+                alert(res);
+                if (res == "新增成功")
+                    location.reload();
+            }
+        });
+    }
 
 
     function init() {
@@ -160,7 +176,7 @@
                     <a class="btn btn-outline-secondary" href="excel_remark.php"
                         style="margin-right: 10px;">儲存外系授課與超鐘點Excel</a>
                     <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#selectpassword"
-                        data-whatever="@getbootstrap" style="margin-right: 10px;">查詢教師密碼</button>
+                        data-whatever="@getbootstrap" style="margin-right: 10px;">新增/查詢教師密碼</button>
                     <button type=" button" class="btn btn-primary" data-toggle="modal" data-target="#editpassword"
                         data-whatever="@getbootstrap" style="margin-right: 10px;">修改密碼</button>
                     <a class="btn btn-outline-secondary" href="login.php?logout=1">登出</a>
@@ -302,30 +318,35 @@
         </div>
         <!--修改密碼區塊 -->
 
-        <!--查詢密碼 -->
+        <!--新增/查詢教師 -->
         <div class="modal fade" id="selectpassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe2"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabe2">查詢教師密碼</h5>
+                        <h5 class="modal-title" id="exampleModalLabe2">新增/查詢教師</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body text-left">
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">請輸入導師姓名:</label>
-                            <input type="text" class="form-control" id="teacher_name" name="teacher_name">
+                            <label for="teacher_name" class="col-form-label ">教師姓名:
+                            </label>
+                            <input type="text" class="form-control" id="teacher_name" name="teacher_name"
+                                aria-describedby="selectHelp" value="">
+                            <div id="selectHelp" class="form-text">
+                                <font size="2">*欲查詢帳號密碼請輸入此欄後，按下"查詢"</font>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">導師帳號:</label>
+                            <label for="teacher_account" class="col-form-label">教師帳號:</label>
                             <input type="text" class="form-control" id="teacher_account" name="teacher_account"
                                 value="">
                         </div>
                         <div class="form-group ">
 
-                            <label for="recipient-name" class="col-form-label">導師密碼:</label>
+                            <label for="teacher_password" class="col-form-label">教師密碼:</label>
                             <div class="input-group">
                                 <input type="password" class="form-control" id="teacher_password"
                                     aria-describedby="toggle-password" name="teacher_password" value="">
@@ -338,9 +359,15 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" onclick="select_teacher_info()">查詢</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">完成</button>
+                    <div class="modal-footer justify-content-between">
+
+                        <button class="btn btn-danger" onclick="insert_teacher()">新增</button>
+                        <div>
+                            <a class="btn btn-success" href="export_account.php">匯出教師帳號密碼</a>
+                            <button class="btn btn-primary" onclick="select_teacher_info()">查詢</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">完成</button>
+                        </div>
+
 
                     </div>
 
