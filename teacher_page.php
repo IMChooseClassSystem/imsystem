@@ -51,10 +51,11 @@ window.onload = function() {
             //$("#classTotal").text("已選 " + classTatal + " 學分")
             $("#classTotal").text("上學期已選 : " + class_UP + " 學分，下學期已選 : " + class_DN + " 學分");
             $("#otherClasses").text(res.remark);
-            if (res.overClass == 0) {
-                $('input:radio[name="overClassRadio"]').filter('[value="0"]').attr('checked', true);
-            } else {
+            // console.log(res.overClass)
+            if (res.overClass == null || res.overClass == 1) {
                 $('input:radio[name="overClassRadio"]').filter('[value="1"]').attr('checked', true);
+            } else {
+                $('input:radio[name="overClassRadio"]').filter('[value="0"]').attr('checked', true);
             }
         }
     });
@@ -90,7 +91,7 @@ function choose_class() {
                 class_UP += parseInt(tr.childNodes[7].textContent)
             else if (course == "學期（下）")
                 class_DN += parseInt(tr.childNodes[7].textContent)
-            console.log(course)
+            // console.log(course)
             orderCount++;
             class_ID.push({
                 sequence: orderCount,
@@ -537,14 +538,18 @@ $(document).ready(init);
                 </div>
             </div>
         </div>
-        <div class="col-auto align-self-center ">
-            <button type="button" class="btn btn-success" onclick="choose_class()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                    class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
-                    <path
-                        d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
-                </svg>
-            </button>
+        <div class="col-auto pt-5 mt-5">
+            <div class="text-center mt-5">
+                <label for="chooseBtn" class="form-label ">選擇<br>課程</label>
+                <button type="button" class="btn-success form-control" onclick="choose_class()" id="chooseBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
+                    </svg>
+                </button>
+            </div>
+
         </div>
 
         <div class="col">
@@ -589,14 +594,14 @@ $(document).ready(init);
                                     是否要超鐘點
                                 </td>
                                 <td><input class="form-check-input" type="radio" id="overclassY" value="1"
-                                        name="overClassRadio">
+                                        name="overClassRadio" checked>
                                     <label class="form-check-label" for="flexRadioDefault1">
                                         是
                                     </label>
                                 </td>
                                 <td>
                                     <input class="form-check-input" type="radio" value="0" id="overclassN"
-                                        name="overClassRadio" checked>
+                                        name="overClassRadio">
                                     <label class="form-check-label" for="flexRadioDefault2">
                                         否
                                     </label>
@@ -608,24 +613,26 @@ $(document).ready(init);
                 </div>
             </div>
         </div>
-        <div class="col-auto ">
-            <button type="button" class="btn btn-warning" onclick="moveUp()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                    class="bi bi-arrow-up-circle-fill white" viewBox="0 0 16 16">
-                    <path
-                        d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
-                </svg>
-            </button>
-            <div class=" my-4"></div>
-            <button type="button" class="btn btn-warning" onclick="moveDown()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                    class="bi bi-arrow-down-circle-fill white" viewBox="0 0 16 16">
-                    <path
-                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z">
-                    </path>
-                </svg>
-            </button>
-
+        <div class="col-auto pt-5 mt-5">
+            <div class="text-center mt-5">
+                <label for="UpDwBtn" class="form-label ">志願序<br>調整</label>
+                <button type="button" class="form-control btn-warning" onclick="moveUp()" id="UpDwBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-arrow-up-circle-fill white" viewBox="0 0 16 16">
+                        <path
+                            d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
+                    </svg>
+                </button>
+                <div class=" my-4"></div>
+                <button type="button" class="btn btn-warning" onclick="moveDown()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-arrow-down-circle-fill white" viewBox="0 0 16 16">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 </div>

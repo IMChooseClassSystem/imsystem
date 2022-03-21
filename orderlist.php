@@ -13,7 +13,7 @@ if (isset($_GET['getOrderlist']) && $_GET['getOrderlist']) {
     $stmt->execute();
     $result_remark = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $remark = "";
-    $overClass = 0;
+    $overClass = null;
     foreach ($result_remark as $row) {
         $remark = $row["remark"];
         $overClass = $row["over_class"];
