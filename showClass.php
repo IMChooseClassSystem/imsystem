@@ -17,7 +17,7 @@ if (!empty($_GET["kind"]) && !empty($_GET["class"])) {
 }
 
 $query_courseInformation = "SELECT * FROM ( 
-    SELECT distinct ROW_NUMBER() OVER (ORDER BY C.ID DESC ) as ROW_ID, C.*, K.kind_name, CI.class_name FROM curriculum C 
+    SELECT distinct ROW_NUMBER() OVER (ORDER BY C.kind,C.getyear, C.kindyear, C.creditUP  DESC ) as ROW_ID, C.*, K.kind_name, CI.class_name FROM curriculum C 
     LEFT JOIN kind_info K ON C.kind= K.kind_ID LEFT JOIN class_info CI ON C.getyear= CI.class_ID and C.kind=CI.kind_ID " . $sqlfilter . "
     GROUP BY C.curriculum, C.kind, C.outkind, C.getyear, C.course, C.kindyear, C.ID, C.creditUP, C.creditDN, C.hourUP, C.hourTUP, C.hourTDN, C.hourDN, CI.class_name, K.kind_name ) R 
     ";
