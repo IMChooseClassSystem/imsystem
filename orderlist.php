@@ -2,7 +2,7 @@
 session_start();
 include_once("dbconnection.php");
 include("teacher_page_function.php");
-if (isset($_GET['getOrderlist']) && $_GET['getOrderlist']) {
+if (isset($_POST['getOrderlist']) && $_POST['getOrderlist']) {
     $sql = "select C.* ,O.sequence,O.curriculum_ID,k.kind_name,ci.class_name from curriculum C , orderlist O ,kind_info k,class_info ci where C.ID = O.curriculum_ID and O.teacher_ID=" . $_SESSION["teacherID"] . " and k.kind_ID=C.kind and ci.kind_ID = C.kind and ci.class_ID = C.getyear order by O.sequence";
     $statement = $conn->prepare($sql);
     $statement->execute();
@@ -19,7 +19,7 @@ if (isset($_GET['getOrderlist']) && $_GET['getOrderlist']) {
         $overClass = $row["over_class"];
     }
     orderlistTable($result, $remark, $overClass);
-} else if (isset($_GET["classIDArray"])) {
+} else if (isset($_POST["classIDArray"])) {
     //每次儲存都清空
     $sql = "DELETE FROM orderlist WHERE teacher_ID =" . $_SESSION["teacherID"];
     //Prepare the SQL query.
@@ -30,7 +30,7 @@ if (isset($_GET['getOrderlist']) && $_GET['getOrderlist']) {
     $sql = "INSERT INTO orderlist (teacher_ID,curriculum_ID,sequence) VALUES (?,?,?)";
 
     $stmt = $conn->prepare($sql);
-    foreach ($_GET["classIDArray"] as $key => $value) {
+    foreach ($_POST["classIDArray"] as $key => $value) {
         $stmt->execute([$_SESSION["teacherID"], $value["classID"], $value["sequence"]]);
     }
     //每次儲存都清空
@@ -41,8 +41,8 @@ if (isset($_GET['getOrderlist']) && $_GET['getOrderlist']) {
     $statement->execute();
     $sql = "Insert into orderlist_remark(remark,over_class,teacher_ID) values(?,?,?)";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$_GET["otherClass"], $_GET["overClass"], $_SESSION["teacherID"]]);
-    echo json_encode(["classIDArray" => $_GET["classIDArray"], "remark" => $_GET["otherClass"]]);
+    $stmt->execute([$_POST["otherClass"], $_POST["overClass"], $_SESSION["teacherID"]]);
+    echo json_encode(["classIDArray" => $_POST["classIDArray"], "remark" => $_POST["otherClass"]]);
     // print_r($_GET["classIDArray"], $_GET["otherClass"]);
 }
 function orderlistTable($result, $remark, $overClass)

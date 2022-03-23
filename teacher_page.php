@@ -29,7 +29,7 @@ var course = "";
 window.onload = function() {
     var value = true;
     $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: "orderlist.php",
         data: {
             getOrderlist: value,
@@ -51,7 +51,7 @@ window.onload = function() {
             //$("#classTotal").text("已選 " + classTatal + " 學分")
             $("#classTotal").text("上學期已選 : " + class_UP + " 學分，下學期已選 : " + class_DN + " 學分");
             $("#otherClasses").text(res.remark);
-            // console.log(res.overClass)
+            //console.log(res.overClass)
             if (res.overClass == null || res.overClass == 1) {
                 $('input:radio[name="overClassRadio"]').filter('[value="1"]').attr('checked', true);
             } else {
@@ -319,7 +319,7 @@ function swapNode(node1, node2) {
 function saveOrderLIst() {
     if (class_ID.length > 0) {
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: "orderlist.php",
             data: {
                 classIDArray: class_ID,
